@@ -47,9 +47,12 @@ bool Entity::isPlayer()
 	return *(uint64_t*)(buffer + OFFSET_NAME) == 125780153691248;
 }
 
-bool Entity::isDummy()
+bool Entity::isDummy() 
 {
-	return *(int*)(buffer + OFFSET_TEAM) == 97;
+  char class_name[33] = {};
+  get_class_name(ptr, class_name);
+  
+  return strncmp(class_name, "CAI_BaseNPC", 11) == 0; 
 }
 
 bool Entity::isKnocked()
@@ -148,9 +151,12 @@ void Entity::get_name(WinProcess& mem, uint64_t g_Base, uint64_t index, char* na
 	mem.ReadMem(mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index), (uint64_t)name, 32);
 }
 
-bool Item::isItem()
+bool Item::isItem() 
 {
-	return *(int*)(buffer + OFFSET_ITEM_GLOW) >= 1358917120;
+  char class_name[33] = {};
+  get_class_name(ptr, class_name);
+   
+  return strncmp(class_name, "CPropSurvival", 13) == 0;
 }
 
 bool Item::isGlowing()

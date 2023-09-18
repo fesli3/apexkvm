@@ -5,7 +5,7 @@ UnknownCheats thread: https://www.unknowncheats.me/forum/apex-legends/406426-kvm
 
 Bone IDs reference: https://www.unknowncheats.me/wiki/Apex_Legends_Bones_and_Hitboxes
 
-Game version (Steam & Origin): v3.0.42.35 - S18
+Game version (Steam): v3.0.42.35 - S18
 
 - Windows 1903
 - 1920*1080 by default

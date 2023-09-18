@@ -21,6 +21,6 @@ FEATURES :
 - SuperGlide by OneButton : XBUTTON1 (MOUSE_BUTTON4)
 - Auto WallJump
 
-- !!! WARNING !!!
-  If you use the Client.exe and Overlay.exe, you need to obfuscate these 2 files.
-  If you use Client.exe and Overlay from NVIDIA, you need to obfuscate the Client.exe only.
+!!! WARNING !!!
+- If you use the Client.exe and Overlay.exe, you need to obfuscate these 2 files.
+- If you use Client.exe and Overlay from NVIDIA, you need to obfuscate the Client.exe only.

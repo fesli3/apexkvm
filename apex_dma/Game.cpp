@@ -171,8 +171,8 @@ QAngle Entity::GetRecoil()
 void Entity::get_name(uint64_t g_Base, uint64_t index, char* name)
 {
 	index *= 0x10;
-    uint64_t name_ptr = 0;
-    mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index, name_ptr);
+    	uint64_t name_ptr = 0;
+    	mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index, name_ptr);
 	mem.ReadArray<char>(name_ptr, name, 32);
 }
 //Items
@@ -192,6 +192,7 @@ bool Item::isBox()
 
 	return strncmp(class_name, "CDeathBoxProp", 13) == 0;
 }
+
 //Traps
 bool Item::isTrap()
 {

@@ -47,6 +47,16 @@ public:
 	void get_name(WinProcess& mem, uint64_t g_Base, uint64_t index, char* name);
 };
 
+struct ClientClass {
+  uint64_t pCreateFn;
+  uint64_t pCreateEventFn; 
+  uint64_t pNetworkName;
+  uint64_t pRecvTable;
+  uint64_t pNext;
+  uint32_t ClassID;
+  uint32_t ClassSize;
+};
+
 class Item
 {
 public:

@@ -17,6 +17,24 @@ bool Entity::Observing(WinProcess& mem, uint64_t entitylist)
 	return *(bool*)(buffer + OFFSET_OBSERVER_MODE);
 }
 
+void get_class_name(uint64_t entity_ptr, char* out_str) {
+  uint64_t client_networkable_vtable;
+  mem.Read<uint64_t>(entity_ptr + 8 * 3, client_networkable_vtable);
+  
+  uint64_t get_client_class;
+  mem.Read<uint64_t>(client_networkable_vtable + 8 * 3, get_client_class);
+
+  uint32_t disp;
+  mem.Read<uint32_t>(get_client_class + 3, disp);
+
+  const uint64_t client_class_ptr = get_client_class + disp + 7;
+
+  ClientClass client_class;
+  mem.Read<ClientClass>(client_class_ptr, client_class);
+
+  mem.ReadArray<char>(client_class.pNetworkName, out_str, 32);
+}
+
 int Entity::getTeamId()
 {
 	return *(int*)(buffer + OFFSET_TEAM);

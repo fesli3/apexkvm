@@ -23,5 +23,5 @@ FEATURES :
 - Auto WallJump
 
 !!! WARNING !!!
-- If you use the Client.exe and Overlay.exe, you need to obfuscate these 2 files.
+- If you use the Client.exe and Overlay.exe, you need to obfuscate both files.
 - If you use Client.exe and Overlay from NVIDIA, you need to obfuscate the Client.exe only.

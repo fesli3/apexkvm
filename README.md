@@ -10,11 +10,13 @@ Game version (Steam & Origin): v3.0.42.35 - S18
 - 1920*1080 by default
 - Added function to get entity type
 
-  Visuals:
+VISUALS :
 - ESP Seer Health and Shield
+- Players & Items Glow
+- DeathBox & Caustic's Traps Glow
 - Spectators count
 
-Misc:
+FEATURES :
 - Pathfinder Auto Grapple
 - SuperGlide by OneButton : XBUTTON1 (MOUSE_BUTTON4)
 - Auto WallJump

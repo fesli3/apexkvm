@@ -145,18 +145,42 @@ QAngle Entity::GetRecoil()
 	return *(QAngle*)(buffer + OFFSET_AIMPUNCH);
 }
 
-void Entity::get_name(WinProcess& mem, uint64_t g_Base, uint64_t index, char* name)
+//void Entity::get_name(WinProcess& mem, uint64_t g_Base, uint64_t index, char* name)
+//{
+//	index *= 0x10;
+//	mem.ReadMem(mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index), (uint64_t)name, 32);
+//}
+void Entity::get_name(uint64_t g_Base, uint64_t index, char* name)
 {
 	index *= 0x10;
-	mem.ReadMem(mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index), (uint64_t)name, 32);
+    uint64_t name_ptr = 0;
+    mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index, name_ptr);
+	mem.ReadArray<char>(name_ptr, name, 32);
 }
-
+//Items
 bool Item::isItem() 
 {
   char class_name[33] = {};
   get_class_name(ptr, class_name);
    
   return strncmp(class_name, "CPropSurvival", 13) == 0;
+}
+
+//Deathboxes
+bool Item::isBox()
+{
+	char class_name[33] = {};
+	get_class_name(ptr, class_name);
+
+	return strncmp(class_name, "CDeathBoxProp", 13) == 0;
+}
+//Traps
+bool Item::isTrap()
+{
+	char class_name[33] = {};
+	get_class_name(ptr, class_name);
+
+	return strncmp(class_name, "caustic_trap", 13) == 0;
 }
 
 bool Item::isGlowing()

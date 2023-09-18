@@ -73,7 +73,29 @@ struct Matrix
 float lastvis_esp[100];
 float lastvis_aim[100];
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+void AutoGrapple(WinProcess& mem, uint64_t LocalPlayer) {
+
+  extern uint64_t g_Base;
+
+  int inJumpState = mem.Read<int>(LocalPlayer + OFFSET_IN_JUMP);
+
+  if (inJumpState == 4) {
+
+    mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 5);
+
+    int grappleState = mem.Read<int>(LocalPlayer + 0x2ca8 + 0x0048);
+
+    if (grappleState == 1) {
+
+      mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 4);
+
+    }
+
+  }
+
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ProcessPlayer(WinProcess& mem, Entity& LPlayer, Entity& target, uint64_t entitylist, int index)
 {
@@ -151,6 +173,10 @@ void DoActions(WinProcess& mem)
 
 			Entity LPlayer = getEntity(mem, LocalPlayer);
 
+///////////////////////////////////
+			AutoGrapple(mem, LocalPlayer);
+///////////////////////////////////
+			
 			team_player = LPlayer.getTeamId();
 			if (team_player < 0 || team_player>50)
 			{

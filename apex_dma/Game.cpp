@@ -17,24 +17,6 @@ bool Entity::Observing(WinProcess& mem, uint64_t entitylist)
 	return *(bool*)(buffer + OFFSET_OBSERVER_MODE);
 }
 
-void get_class_name(uint64_t entity_ptr, char* out_str) {
-  uint64_t client_networkable_vtable;
-  mem.Read<uint64_t>(entity_ptr + 8 * 3, client_networkable_vtable);
-  
-  uint64_t get_client_class;
-  mem.Read<uint64_t>(client_networkable_vtable + 8 * 3, get_client_class);
-
-  uint32_t disp;
-  mem.Read<uint32_t>(get_client_class + 3, disp);
-
-  const uint64_t client_class_ptr = get_client_class + disp + 7;
-
-  ClientClass client_class;
-  mem.Read<ClientClass>(client_class_ptr, client_class);
-
-  mem.ReadArray<char>(client_class.pNetworkName, out_str, 32);
-}
-
 int Entity::getTeamId()
 {
 	return *(int*)(buffer + OFFSET_TEAM);
@@ -163,45 +145,16 @@ QAngle Entity::GetRecoil()
 	return *(QAngle*)(buffer + OFFSET_AIMPUNCH);
 }
 
-//void Entity::get_name(WinProcess& mem, uint64_t g_Base, uint64_t index, char* name)
-//{
-//	index *= 0x10;
-//	mem.ReadMem(mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index), (uint64_t)name, 32);
-//}
-void Entity::get_name(uint64_t g_Base, uint64_t index, char* name)
+void Entity::get_name(WinProcess& mem, uint64_t g_Base, uint64_t index, char* name)
 {
 	index *= 0x10;
-    	uint64_t name_ptr = 0;
-    	mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index, name_ptr);
-	mem.ReadArray<char>(name_ptr, name, 32);
+	mem.ReadMem(mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index), (uint64_t)name, 32);
 }
-//Items
-bool Item::isItem() 
+
+bool Item::isItem()
 {
-  char class_name[33] = {};
-  get_class_name(ptr, class_name);
-   
-  return strncmp(class_name, "CPropSurvival", 13) == 0;
+	return *(int*)(buffer + OFFSET_ITEM_GLOW) >= 1358917120;
 }
-
-//Deathboxes
-bool Item::isBox()
-{
-	char class_name[33] = {};
-	get_class_name(ptr, class_name);
-
-	return strncmp(class_name, "CDeathBoxProp", 13) == 0;
-}
-
-//Traps
-bool Item::isTrap()
-{
-	char class_name[33] = {};
-	get_class_name(ptr, class_name);
-
-	return strncmp(class_name, "caustic_trap", 13) == 0;
-}
-
 bool Item::isGlowing()
 {
 	return *(int*)(buffer + OFFSET_ITEM_GLOW) == 1363184265;

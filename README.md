@@ -9,18 +9,16 @@ Game version (Steam): v3.0.42.35 - S18
 
 - Windows 1903
 - 1920*1080 by default
-- Added function to get entity type
 
 VISUALS :
 - ESP Seer Health and Shield
 - Players & Items Glow
-- DeathBox & Caustic's Traps Glow
 - Spectators count
 
 FEATURES :
-- Pathfinder Auto Grapple
+- Dynamic Aim Fov [25m/100m]
 - SuperGlide by OneButton : XBUTTON1 (MOUSE_BUTTON4)
-- Auto WallJump
+- Auto WallJump (it work but need to be optimized)
 
 !!! WARNING !!!
 - If using Client.exe and Overlay.exe - obfuscate both files.

@@ -47,12 +47,9 @@ bool Entity::isPlayer()
 	return *(uint64_t*)(buffer + OFFSET_NAME) == 125780153691248;
 }
 
-bool Entity::isDummy() 
+bool Entity::isDummy()
 {
-  char class_name[33] = {};
-  get_class_name(ptr, class_name);
-  
-  return strncmp(class_name, "CAI_BaseNPC", 11) == 0; 
+	return *(int*)(buffer + OFFSET_TEAM) == 97;
 }
 
 bool Entity::isKnocked()

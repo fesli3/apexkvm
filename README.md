@@ -12,7 +12,8 @@ Game version (Steam): v3.0.42.35 - S18
 
 VISUALS :
 - ESP Seer Health and Shield
-- Players & Items Glow
+- Players Glow
+- Items Glow (NEED AN UPDATE)
 - Spectators count
 
 FEATURES :

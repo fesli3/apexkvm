@@ -8,6 +8,7 @@
 #include <cfloat>
 #include "Game.h"
 #include <thread>
+#include <array>
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
@@ -35,6 +36,20 @@ int safe_level = 0;
 bool aiming = false;
 extern float smooth;
 extern int bone;
+
+//Player Glow Color and Brightness. 
+//Visable 
+float glowr = 255.0f; //Red 0-255, higher is brighter color.
+float glowg = 0.0f; //Green 0-255, higher is brighter color.
+float glowb = 0.0f; //Blue 0-255, higher is brighter color.
+//Visable
+float glowrviz = 0.0f; //Red 0-255, higher is brighter color.
+float glowgviz = 255.0f; //Green 0-255, higher is brighter color.
+float glowbviz = 0.0f; //Blue 0-255, higher is brighter color.
+//Knocked
+float glowrknocked = 120.0f; //Red 0-255, higher is brighter color.
+float glowgknocked = 120.0f; //Green 0-255, higher is brighter color.
+float glowbknocked = 120.0f; //Blue 0-255, higher is brighter color.
 
 bool actions_t = false;
 bool esp_t = false;
@@ -135,6 +150,7 @@ void ProcessPlayer(WinProcess& mem, Entity& LPlayer, Entity& target, uint64_t en
 			tmp_aimentity = target.ptr;
 		}
 	}
+	SetPlayerGlow(LPlayer, target, index);
 	lastvis_aim[index] = target.lastVisTime();
 }
 

@@ -3,6 +3,9 @@ extern bool firing_range;
 float smooth = 12.0f;
 bool aim_no_recoil = true;
 int bone = 2;
+extern float glowr;
+extern float glowg;
+extern float glowb;
 
 bool Entity::Observing(WinProcess& mem, uint64_t entitylist)
 {
@@ -106,12 +109,32 @@ bool Entity::isZooming()
 	return *(int*)(buffer + OFFSET_ZOOMING) == 1;
 }
 
+extern float glowr;
+extern float glowg;
+extern float glowb;
+
+extern int glowsetting;
+
 void Entity::enableGlow(WinProcess& mem)
 {
-	mem.Write<int>(ptr + OFFSET_GLOW_T1, 16256);
-	mem.Write<int>(ptr + OFFSET_GLOW_T2, 1193322764);
-	mem.Write<int>(ptr + OFFSET_GLOW_ENABLE, 7);
-	mem.Write<int>(ptr + OFFSET_GLOW_THROUGH_WALLS, 2);
+	int contextId = 1; // Same as glow enable
+
+
+	std::array<unsigned char, 4> highlightFunctionBits = {
+		0,   // InsideFunction
+		125, // OutlineFunction: HIGHLIGHT_OUTLINE_OBJECTIVE
+		64,  // OutlineRadius: size * 255 / 8
+		64   // (EntityVisible << 6) | State & 0x3F | (AfterPostProcess << 7)
+	};
+	std::array<float, 3> highlightParameter = { 0, 1, 0 };
+
+
+	mem.Write<unsigned char>(ptr + 0x298 + contextId, glowsetting);
+	long highlightSettingsPtr;
+	mem.Read<long>(ptr + 0xb5f9620, highlightSettingsPtr);
+	mem.Write<int>(ptr + OFFSET_GLOW_ENABLE, 1);
+	mem.Write<typeof(highlightFunctionBits)>(highlightSettingsPtr + 40 * glowsetting + 4, highlightFunctionBits);
+	mem.Write<typeof(highlightParameter)>(highlightSettingsPtr + 40 * glowsetting + 8, highlightParameter);
 }
 
 void Entity::disableGlow(WinProcess& mem)
@@ -164,7 +187,9 @@ void Item::enableGlow(WinProcess& mem)
 
 void Item::disableGlow(WinProcess& mem)
 {
-	mem.Write<int>(ptr + OFFSET_ITEM_GLOW, 1411417991);
+	mem.Write<int>(ptr + OFFSET_GLOW_ENABLE, 0);
+        mem.Write<int>(ptr + OFFSET_HIGHLIGHTSERVERACTIVESTATES + 0, 0);
+    	mem.Write<int>(ptr + OFFSET_GLOW_THROUGH_WALLS_GLOW_VISIBLE_TYPE , 5);
 }
 
 Vector Item::getPosition()

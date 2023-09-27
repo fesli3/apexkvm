@@ -37,6 +37,7 @@ public:
 	Vector GetCamPos();
 	QAngle GetRecoil();
 	Vector GetViewAnglesV();
+	float GetYaw();
 
 	void enableGlow(WinProcess& mem);
 	void disableGlow(WinProcess& mem);
@@ -47,17 +48,6 @@ public:
 	void get_name(WinProcess& mem, uint64_t g_Base, uint64_t index, char* name);
 };
 
-struct GColor 
-{
-    float r, g, b;
-};
-
-struct Fade 
-{
-    int a, b;
-    float c, d, e, f;
-};
-
 class Item
 {
 public:
@@ -66,9 +56,9 @@ public:
 	Vector getPosition();
 	bool isItem();
 	bool isGlowing();
-	void BlueGlow();
-	void enableGlow(WinProcess& mem);
-	void disableGlow(WinProcess& mem);
+
+	void enableGlow();
+	void disableGlow();
 };
 
 struct ClientClass {

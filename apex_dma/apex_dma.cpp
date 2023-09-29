@@ -33,7 +33,7 @@ extern int bone;
 bool thirdperson = false;
 bool chargerifle = false;
 bool shooting = false;
-
+bool updateInsideValue_t = false;
 bool actions_t = false;
 bool esp_t = false;
 bool aim_t = false;

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export RUSTFLAGS="-Awarnings"
 # Execute the Python script to update offsets.h
 python3 updater.py
 

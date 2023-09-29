@@ -41,7 +41,6 @@ OFFSET_LIST = [
     {"name": "OFFSET_OBSERVING_TARGET", "section": "[RecvTable.DT_LocalPlayerExclusive]", "keyname": "m_hObserverTarget", "value": ""},
     {"name": "OFFSET_WEAPON", "section": "[RecvTable.DT_BaseCombatCharacter]", "keyname": "m_latestPrimaryWeapons", "value": ""},
     {"name": "OFFSET_AMMO", "section": "[DataMap.CWeaponX]", "keyname": "m_ammoInClip", "value": ""},
-    {"name": "OFFSET_ITEM_ID", "section": "[RecvTable.DT_PropSurvival]", "keyname": "m_customScriptInt", "value": ""},
     {"name": "OFFSET_IN_JUMP", "section": "[Buttons]", "keyname": "in_jump", "value": ""},
     {"name": "OFFSET_IN_DUCK", "section": "[Buttons]", "keyname": "in_duck", "value": ""},
     {"name": "OFFSET_FLAGS", "section": "[RecvTable.DT_Player]", "keyname": "m_fFlags", "value": ""},
@@ -54,6 +53,7 @@ OFFSET_LIST = [
     {"name": "OFFSET_WALL_RUN_START_TIME", "section": "[DataMap.C_Player]", "keyname": "m_wallRunStartTime", "value": ""},
     {"name": "OFFSET_WALL_RUN_CLEAR_TIME", "section": "[DataMap.C_Player]", "keyname": "m_wallRunClearTime", "value": ""},
     {"name": "OFFSET_SKYDIVE_STATE", "section": "[DataMap.C_Player]", "keyname": "m_skydiveState", "value": ""},
+    #{"name": "OFFSET_ITEM_ID", "section": "[RecvTable.DT_PropSurvival]", "keyname": "m_customScriptInt", "value": ""},
     #{"name": "OFFSET_HANG_ON_WALL", "section": "DataMap.C_Player", "keyname": "m_traversalStartTime", "value": ""},
     #{"name": "OFFSET_HANG_TIME", "section": "DataMap.C_Player", "keyname": "m_traversalProgress", "value": ""},
     #{"name": "OFFSET_VIEWMODEL", "section": "[RecvTable.DT_Player]", "keyname": "m_hViewModels", "value": ""},
@@ -135,11 +135,12 @@ def write_offsets_to_file(filepath):
         f.write("#define OFFSET_GLOW_T1  0x292 //16256 = enabled, 0 = disabled\n")
         f.write("#define OFFSET_GLOW_T2  0x30c //1193322764 = enabled, 0 = disabled\n")
         f.write("#define OFFSET_GLOW_ENABLE  0x02cc //0x3c8 //7 = enabled, 2 = disabled [RecvTable.DT_HighlightSettings] -> m_highlightServerContextID + 0x8\n")
-        f.write("#define OFFSET_GLOW_THROUGH_WALLS  0x02d4 //2 = enabled, 5 = disabled [RecvTable.DT_HighlightSettings] -> m_highlightServerContextID + 0x10\n") 
-        f.write("#define GLOW_TYPE  0x2c4 + 0x30\n")
-        f.write("#define GLOW_COLOR_R  0x200\n")
-        f.write("#define GLOW_COLOR_G  GLOW_COLOR_R + 0x04\n")
-        f.write("#define GLOW_COLOR_B  GLOW_COLOR_G + 0x04\n")
+        f.write("#define OFFSET_GLOW_THROUGH_WALLS  0x02d4 //2 = enabled, 5 = disabled [RecvTable.DT_HighlightSettings] -> m_highlightServerContextID + 0x10\n")
+        f.write("#define OFFSET_ITEM_ID  0x1578n")
+        f.write("#define OFFSET_GLOW_TYPE  0x2c4 + 0x30\n")
+        f.write("#define OFFSET_GLOW_COLOR_R  0x200\n")
+        f.write("#define OFFSET_GLOW_COLOR_G  GLOW_COLOR_R + 0x04\n")
+        f.write("#define OFFSET_GLOW_COLOR_B  GLOW_COLOR_G + 0x04\n")
         f.write("\n")
         f.write("#endif\n")
         

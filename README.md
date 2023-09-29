@@ -24,6 +24,8 @@ FEATURES :
  - Auto WallJump (it work but need to be optimized)
 
 !!! WARNING !!!
+
 If using Client.exe and Overlay.exe - obfuscate both files.
 If using Client.exe and Overlay from NVIDIA - obfuscate both files.
+
 example : https://github.com/albatror/adkv/blob/vmread/test.png

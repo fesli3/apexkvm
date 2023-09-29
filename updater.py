@@ -153,7 +153,7 @@ def get_user_url():
 
 if __name__ == "__main__":
     # Define the path to the output file
-    FILE_PATH = "./offsets.h"
+    FILE_PATH = "./apex_dma/offsets.h"
 
     # Create a backup of the existing offsets.h file
     backup_file_path = FILE_PATH + ".bak"

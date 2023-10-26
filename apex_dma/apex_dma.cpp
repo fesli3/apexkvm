@@ -198,7 +198,7 @@ if (frameSleepTimer == 0)
 {
     if (SuperKey)
     {
-        if (m_traversalProgress > 0.85 && m_traversalProgress < 0.92)
+        if (m_traversalProgress > 0.91 && m_traversalProgress < 0.93)
         {
             superGlideStart = true;
         }

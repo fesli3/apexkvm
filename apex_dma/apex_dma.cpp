@@ -168,12 +168,7 @@ void DoActions(WinProcess& mem)
 				continue;
 			}
 			uint64_t entitylist = g_Base + OFFSET_ENTITYLIST;
-
-			uint64_t baseent = mem.Read<uint64_t>(entitylist);
-			if (baseent == 0)
-			{
-				continue;
-			}
+//////////////////////////////////
 
 //////////////////////////////////
 int frameSleepTimer = 0;
@@ -241,6 +236,13 @@ if (frameSleepTimer == 0) {
 frameSleepTimer -= 1;
 //////////////////////////////////
 			
+//////////////////////////////////
+			uint64_t baseent = mem.Read<uint64_t>(entitylist);
+			if (baseent == 0)
+			{
+				continue;
+			}
+
 			max = 999.0f;
 			tmp_spec = 0;
 			tmp_all_spec = 0;

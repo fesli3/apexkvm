@@ -181,8 +181,6 @@ void DoActions()
 			uint64_t entitylist = g_Base + OFFSET_ENTITYLIST;
 
 ///////////////////////////////
-#include <stdio.h>
-
 bool SuperKey = true; 
 
 int frameSleepTimer;

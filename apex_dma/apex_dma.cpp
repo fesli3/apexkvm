@@ -181,6 +181,8 @@ void DoActions()
 			uint64_t entitylist = g_Base + OFFSET_ENTITYLIST;
 
 ///////////////////////////////
+#include <stdio.h>
+
 bool SuperKey = true; 
 
 int frameSleepTimer;
@@ -188,59 +190,60 @@ int lastFrameNumber;
 bool superGlideStart;
 int superGlideTimer;
 int curFrameNumber;
-float m_traversalProgressTmp = 0.0f;
+float m_traversalProgressTmp = 0.0f;  
 
 float m_traversalProgress;
 
 //int g_Base;
-//int LocalPlayer; 
+//int LocalPlayer;
+//int OFFSET_GLOBAL_VARS; 
 //int OFFSET_TRAVERSAL_PROGRESS;
-//int OFFSET_FORCE_JUMP;
+//int OFFSET_FORCE_JUMP; 
 //int OFFSET_IN_TOGGLE_DUCK;
 //int OFFSET_FORCE_DUCK;
 
-  apex_mem.Read<int>(g_Base + OFFSET_GLOBAL_VARS, curFrameNumber);
-
+  apex_mem.Read<int>(g_Base + OFFSET_GLOBAL_VARS + 0x0008, curFrameNumber);
+  
   apex_mem.Read<float>(LocalPlayer + OFFSET_TRAVERSAL_PROGRESS, m_traversalProgress);
 
   if (curFrameNumber > lastFrameNumber) {
-    frameSleepTimer = 10;
+    frameSleepTimer = 10;  
     lastFrameNumber = curFrameNumber;
   }
 
   if (frameSleepTimer == 0) {
 
-    if (m_traversalProgress > 0.85 && m_traversalProgress < 0.92) {
-      superGlideStart = true;
+      if (m_traversalProgress > 0.85 && m_traversalProgress < 0.92) {
+        superGlideStart = true;
+      }
+
+      if (superGlideStart) {
+
+        superGlideTimer++;
+        
+        if (superGlideTimer == 5) {
+          apex_mem.Write<int>(g_Base + OFFSET_FORCE_JUMP + 0x8, 5); 
+        }
+        
+        else if (superGlideTimer == 6) {
+          apex_mem.Write<int>(g_Base + OFFSET_IN_TOGGLE_DUCK + 0x8, 6);
+        }
+        
+        else if (superGlideTimer == 10) {
+          apex_mem.Write<int>(g_Base + OFFSET_FORCE_JUMP + 0x8, 4);
+          apex_mem.Write<int>(g_Base + OFFSET_FORCE_DUCK + 0x8, 5); 
+          apex_mem.Write<int>(g_Base + OFFSET_FORCE_DUCK + 0x8, 4);
+          m_traversalProgressTmp = m_traversalProgress;
+        }
+        
+        else if (superGlideTimer > 10 && m_traversalProgress != m_traversalProgressTmp) {
+          superGlideStart = false;
+          superGlideTimer = 0;
+        }
+        
+      }
+      
     }
-
-    if (superGlideStart) {
-    
-      superGlideTimer++;
-
-      if (superGlideTimer == 5) { 
-        apex_mem.Write<int>(g_Base + OFFSET_FORCE_JUMP, 5);
-      }
-
-      else if (superGlideTimer == 6) {
-        apex_mem.Write<int>(g_Base + OFFSET_IN_TOGGLE_DUCK, 6);  
-      }
-
-      else if (superGlideTimer == 10) {
-        apex_mem.Write<int>(g_Base + OFFSET_FORCE_JUMP, 4);
-        apex_mem.Write<int>(g_Base + OFFSET_FORCE_DUCK, 5);
-        apex_mem.Write<int>(g_Base + OFFSET_FORCE_DUCK, 4);
-        m_traversalProgressTmp = m_traversalProgress;
-      }
-
-      else if (superGlideTimer > 10 && m_traversalProgress != m_traversalProgressTmp) {
-        superGlideStart = false;
-        superGlideTimer = 0;  
-      }
-
-    }
-
-  }
 
   frameSleepTimer -= 1;
 ///////////////////////////////

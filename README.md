@@ -20,8 +20,8 @@ VISUALS :
 
 FEATURES :
  - Dynamic Aim & Fov [25m/100m]
- - SuperGlide by OneButton : XBUTTON1 (MOUSE_BUTTON4)
- - Auto WallJump (it work but need to be optimized)
+ - AutoSuperGlide (nothing to do, it do for you :) - timing is fixed for 75fps - need to adjust if different)
+ - AutoWallJump removed (it work but need to be optimized)
 
 !!! WARNING !!!
 

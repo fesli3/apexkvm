@@ -11,7 +11,7 @@ Windows 1903
 1920*1080 by default
 
 VISUALS :
- - ESP Box, Line
+ - ESP Box, Line, Distance
  - ESP Seer Health and Shield
  - Players Glow (working)
  - Items Glow (complete disable)

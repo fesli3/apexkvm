@@ -19,6 +19,7 @@ class Entity
 {
 public:
 	uint64_t ptr;
+  	uint64_t entity_index;
 	uint8_t buffer[0x3FF0];
 	Vector getPosition();
 	bool isDummy();

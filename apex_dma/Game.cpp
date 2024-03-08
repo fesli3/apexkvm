@@ -370,24 +370,13 @@ QAngle CalculateBestBoneAim(Entity& from, uintptr_t t, float max_fov)
 	return SmoothedAngles;
 }
 
-Entity getEntity(uintptr_t ptr) {
-  Entity entity = Entity();
-  entity.ptr = ptr;
-  apex_mem.ReadArray<uint8_t>(ptr, entity.buffer, sizeof(entity.buffer));
-  entity.entity_index = *(uint64_t *)(entity.buffer + 0x38);
-  if (Entity::isPlayer(ptr)) {
-    entity.is_player = true;
-  }
-  return entity;
+Entity getEntity(uintptr_t ptr)
+{
+	Entity entity = Entity();
+	entity.ptr = ptr;
+	apex_mem.ReadArray<uint8_t>(ptr, entity.buffer, sizeof(entity.buffer));
+	return entity;
 }
-
-//Entity getEntity(uintptr_t ptr)
-//{
-//	Entity entity = Entity();
-//	entity.ptr = ptr;
-//	apex_mem.ReadArray<uint8_t>(ptr, entity.buffer, sizeof(entity.buffer));
-//	return entity;
-//}
 
 Item getItem(uintptr_t ptr)
 {

@@ -475,8 +475,7 @@ static void EspLoop()
 								health,
 								shield	
 							};
-							//Target.get_name(g_Base, i-1, &players[c].name[0]);
-							Target.get_name(data_buf.name);
+							Target.get_name(g_Base, i-1, &players[c].name[0]);
 							lastvis_esp[c] = Target.lastVisTime();
 							valid = true;
 							c++;
@@ -552,8 +551,7 @@ static void EspLoop()
 								health,
 								shield
 							};
-							//Target.get_name(g_Base, i-1, &players[i].name[0]);
-							Target.get_name(data_buf.name);
+							Target.get_name(g_Base, i-1, &players[i].name[0]);
 							lastvis_esp[i] = Target.lastVisTime();
 							valid = true;
 						}

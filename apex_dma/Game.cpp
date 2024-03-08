@@ -238,20 +238,19 @@ QAngle Entity::GetRecoil()
 	return *(QAngle*)(buffer + OFFSET_AIMPUNCH);
 }
 
-void Entity::get_name(char *name) {
-  uint64_t index = (this->entity_index - 1) * 24;
-  uint64_t name_ptr = 0;
-  apex_mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index, name_ptr);
-  apex_mem.ReadArray<char>(name_ptr, name, 32);
+void Entity::get_name(uint64_t g_Base, uint64_t index, char* name)
+{
+	//index *= 0x10;
+	//char names[64] = { 0 };
+    int name_index;
+    apex_mem.Read<int>(ptr + 0x38, name_index);
+    uint64_t name_ptr = 0;
+    apex_mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + ((name_index - 1) * 24), name_ptr);
+    //apex_mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + ((name_index - 1) * 24));
+	apex_mem.ReadArray<char>(name_ptr, name, 32);
+	//apex_mem.ReadArray<char>(name_ptr, names, 64);
+	//m_strPlayerName = (names);
 }
-
-//void Entity::get_name(uint64_t g_Base, uint64_t index, char* name)
-//{
-//	index *= 0x10;
-//    uint64_t name_ptr = 0;
-//    apex_mem.Read<uint64_t>(g_Base + OFFSET_NAME_LIST + index, name_ptr);
-//	apex_mem.ReadArray<char>(name_ptr, name, 32);
-//}
 
 bool Item::isItem()
 {

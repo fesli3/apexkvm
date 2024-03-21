@@ -60,6 +60,7 @@ typedef struct player
 	int health = 0;
 	int shield = 0;
 	char name[33] = { 0 };
+	int player_xp_level = 0;
 }player;
 
 struct Matrix

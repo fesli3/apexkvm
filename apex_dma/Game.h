@@ -48,6 +48,15 @@ public:
 	Vector getBonePositionByHitbox(int id);
 	bool Observing(uint64_t entitylist);
 	void get_name(uint64_t g_Base, uint64_t index, char* name);
+
+	////test////
+  	int xp_level();
+
+  	// private:
+  	bool is_player = false;
+  	int player_xp_level = 0;
+  	int read_xp_level();
+
 };
 
 class Item

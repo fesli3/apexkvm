@@ -252,6 +252,67 @@ void Entity::get_name(uint64_t g_Base, uint64_t index, char* name)
 	//m_strPlayerName = (names);
 }
 
+////test////
+int Entity::xp_level() {
+  assert(is_player);
+  return player_xp_level + 1;
+}
+
+int Entity::read_xp_level() {
+  assert(is_player);
+
+  int xp = 0;
+  apex_mem.Read<int>(ptr + OFFSET_PLAYER_XP, xp);
+
+  /*
+    MIT License
+
+    Copyright (c) 2023 Xnieno
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to
+    deal in the Software without restriction, including without limitation the
+    rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+    sell copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+    IN THE SOFTWARE.
+  */
+  static int levels[] = {2750,   6650,   11400,  17000,  23350,  30450,  38300,
+                         46450,  55050,  64100,  73600,  83550,  93950,  104800,
+                         116100, 127850, 140050, 152400, 164900, 177550, 190350,
+                         203300, 216400, 229650, 243050, 256600, 270300, 284150,
+                         298150, 312300, 326600, 341050, 355650, 370400, 385300,
+                         400350, 415550, 430900, 446400, 462050, 477850, 493800,
+                         509900, 526150, 542550, 559100, 575800, 592650, 609650,
+                         626800, 644100, 661550, 679150, 696900, 714800};
+
+  if (xp < 0)
+    return 0;
+  if (xp < 100)
+    return 1;
+
+  int level = 56;
+  int arraySize = sizeof(levels) / sizeof(levels[0]);
+
+  for (int i = 0; i < arraySize; i++) {
+    if (xp < levels[i]) {
+      return i + 1;
+    }
+  }
+
+  return level + ((xp - levels[arraySize - 1] + 1) / 18000);
+}
+
 bool Item::isItem()
 {
 	char class_name[33] = {};
@@ -375,7 +436,12 @@ Entity getEntity(uintptr_t ptr)
 	Entity entity = Entity();
 	entity.ptr = ptr;
 	apex_mem.ReadArray<uint8_t>(ptr, entity.buffer, sizeof(entity.buffer));
-	return entity;
+	//return entity;
+  	if (Entity::isPlayer(ptr)) {
+    	entity.is_player = true;
+    	entity.player_xp_level = entity.read_xp_level();
+  }
+  return entity;
 }
 
 Item getItem(uintptr_t ptr)

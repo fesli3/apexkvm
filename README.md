@@ -5,22 +5,22 @@ UnknownCheats thread: https://www.unknowncheats.me/forum/apex-legends/406426-kvm
 
 Bone IDs reference: https://www.unknowncheats.me/wiki/Apex_Legends_Bones_and_Hitboxes
 
-Game version (Steam): v3.0.42.35 - S18
+Game version (Steam): v3.0.62.30 - S20
 
 Windows 1903
 1920*1080 by default
 
 VISUALS :
- - ESP Box, Line, Distance
+ - ESP Box, XP Level, Line, Distance
  - ESP Seer Health and Shield
- - Players Glow (working)
+ - Circle FOV
+ - Players Glow (GREEN when visible, RED when not visible and YELLOW when knocked - Can be changed in the menu of the overlay)
  - Items Glow (complete disable)
  - Spectators count + Name List
- - Circle FOV (Dynamic A&F)
 
 FEATURES :
- - Dynamic Aim & Fov [25m/100m]
- - AutoSuperGlide (nothing to do, it do for you :) - timing is fixed for 75fps - need to adjust if different
+ - Dynamic FOV/AIM/SMOOTH [101m by default]
+ - AutoSuperGlide (nothing to do, it do for you :) )
  - AutoWallJump removed (it work but need to be optimized)
 
 !!! WARNING !!!

@@ -673,7 +673,7 @@ int main(int argc, char** argv)
 		if (IsKeyDown(aim_key) || IsKeyDown(aim_key2))
 		{
 			aiming = true;
-			//randomBone();//RANDOMIZE BONE WHEN SHOOT
+			randomBone();//RANDOMIZE BONE WHEN SHOOT
 		}
 		else
 		{

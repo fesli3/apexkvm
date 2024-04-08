@@ -22,6 +22,7 @@ FEATURES :
  - Dynamic FOV/AIM/SMOOTH [101m by default]
  - AutoSuperGlide (nothing to do, it do for you :) )
  - AutoWallJump removed (it work but need to be optimized)
+ - 1V1 (F9)
 
 !!! WARNING !!!
 

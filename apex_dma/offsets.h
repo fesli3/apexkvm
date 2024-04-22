@@ -1,6 +1,6 @@
-#define OFFSET_ENTITYLIST 0x1DD4178 //[Miscellaneous].cl_entitylist updated 2024/03/27
+#define OFFSET_ENTITYLIST 0x1DD45F8 //[Miscellaneous].cl_entitylist updated 2024/04/22
 #define OFFSET_LOCAL_ENT 0x21830f8 //[Miscellaneous].LocalPlayer updated 2024/04/22
-#define OFFSET_NAME_LIST 0xC5FEC00 //need test //0xc5eb2d0 //[Miscellaneous].NameList updated 2024/02/02
+#define OFFSET_NAME_LIST 0xC5FF080 //need test //0xC5FEC00 //[Miscellaneous].NameList updated 2024/04/22
 #define OFFSET_GLOBAL_VARS 0x16f8ff0 //[Miscellaneous].GlobalVars updated 2024/04/22
  
 #define OFFSET_LEVELNAME 0x16f94f0 //[Miscellaneous].LevelName updated 2024/04/22
@@ -89,7 +89,7 @@
 #define GLOW_TYPE 0x29c // Script_Highlight_GetState + 4 updated 01/10/2024
 #define GLOW_COLOR 0x1D0+ 0x30 // Script_CopyHighlightState 15th mov updated 01/10/2024
 #define GLOW_FADE 0x388+ 0x30 // ats 3rd result of 3 offsets consecutive or first + 8 updated 01/10/2024
-#define HIGHLIGHT_SETTINGS 0xBB24350 //?  //updated 01/9/2024
+#define HIGHLIGHT_SETTINGS 0xBB247D0 //?  //updated 2024/04/22
 #define HIGHLIGHT_TYPE_SIZE 0x34 //? updated 01/10/2024
 #define OFFSET_CROSSHAIR_LAST OFFSET_VISIBLE_TIME + 0x1998 //[Miscellaneous].CWeaponX!lastCrosshairTargetTime updated 2024/04/22
 //#define OFFSET_CROSSHAIR_START 0x1958 //CPlayer!crosshairTargetStartTime updated 01/9/2024

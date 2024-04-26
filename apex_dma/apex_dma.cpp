@@ -10,8 +10,6 @@
 #include <thread>
 #include <array>
 #include <fstream>
-////////////////////////
-////////////////////////
 
 Memory apex_mem;
 Memory client_mem;
@@ -167,13 +165,7 @@ int tmp_all_spec = 0, allied_spectators = 0;
 int settingIndex;
 int contextId;
 std::array<float, 3> highlightParameter;
-///////////
 
-//TEST//
-//ENDTEST//
-/////////////
-
-//////////////////////////////////////////
 //works
 // Inside SetPlayerGlow function
     void SetPlayerGlow(Entity& LPlayer, Entity& Target, int index)
@@ -207,8 +199,6 @@ std::array<float, 3> highlightParameter;
     	}
     	
  }   
-//////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ProcessPlayer(Entity& LPlayer, Entity& target, uint64_t entitylist, int index)
 {
@@ -255,9 +245,6 @@ void ProcessPlayer(Entity& LPlayer, Entity& target, uint64_t entitylist, int ind
 				aimentity=tmp_aimentity=lastaimentity=0;
 			}
 		}
-
-//////////////
-//////////////
 	}
 	else
 	{
@@ -303,10 +290,6 @@ void DoActions()
 {
 	actions_t = true;
 
-///////////////
-
-//////////////
-
 	while (actions_t)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -330,7 +313,6 @@ void DoActions()
 
 			uint64_t entitylist = g_Base + OFFSET_ENTITYLIST;
 
-//////////////////////////////////
 //TEST//
 	int onWallTmp = 0;
 	int wallJumpNow = 0;
@@ -338,8 +320,6 @@ void DoActions()
 	float onEdgeTmp = 0;
 //ENDTEST//
 
-
-///////////////////////////////////////
 // Added walljump logic
 int onWall = 0; apex_mem.Read<int>(LocalPlayer + OFFSET_WALL_RUN_START_TIME, onWall);
 if (onWall != onWallTmp)
@@ -388,9 +368,6 @@ if (wallJumpNow == 2)
         apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 4);
     }
 }
-
-/////////////////
-
     // SUPERGLIDE
 
     static float startjumpTime = 0;
@@ -462,11 +439,6 @@ if (wallJumpNow == 2)
     break;
   }
 //}
-    //////////////////////////////
-
-////////////////////////////////
-//WALLJUMP LOGIC
-////////////////////////////////
 
 // Check if grapple is active
 apex_mem.Read<bool>(LocalPlayer + OFFSET_GRAPPLEACTIVED, isGrappling);
@@ -491,7 +463,6 @@ if (isGrappling && grappleAttached == 1) {
 }
 
 ///////////////////////////////
-
 //if (bhop_enable) {
 //  apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 5);
 //  std::this_thread::sleep_for(std::chrono::milliseconds(1)); 
@@ -633,7 +604,6 @@ if (isGrappling && grappleAttached == 1) {
 
 	actions_t = false;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 player players[toRead];
 
@@ -1085,8 +1055,6 @@ if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*26, shooting_addr)) {
   printf("Read failed!\n"); 
 }
 
-////////
-
 uint64_t onevone_addr = 0;
 printf("Reading onevone address: %lx\n", add_addr + sizeof(uint64_t)*27);
 if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*27, onevone_addr)) {
@@ -1098,8 +1066,6 @@ printf("Reading spec_list address: %lx\n", add_addr + sizeof(uint64_t)*28);
 if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*28, spec_list_addr)) {
   printf("Read failed!\n");
 }
-
-////////
 
 	uint32_t check = 0;
 	client_mem.Read<uint32_t>(check_addr, check);
@@ -1195,7 +1161,7 @@ int main(int argc, char *argv[])
 	//const char* ap_proc = "EasyAntiCheat_launcher.exe";
 
 	//Client "add" offset
-	uint64_t add_off = 0x1fc930; //0x1fb930; //0x1fc930; //0x1fb930; //0x1fc930; //0x1fb930; //0x203950; //0x1fb950; //0x1ec610;
+	uint64_t add_off = 0x1fc930; //0x1fb930;
 
 	std::thread aimbot_thr;
 	std::thread esp_thr;

@@ -359,7 +359,6 @@ void Overlay::RenderEsp()
 						//std::string levelString = std::to_string(players[i].player_level);
 						//String(ImVec2(players[i].boxMiddle, (players[i].b_y + 1)), BLUE, levelString.c_str());  //Level
 
-					////////////////////
 					//if (v.name) {
 					//	ImVec4 backgroundColor = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
 					//	ImU32 textColor = GetContrastColor(GetImU32Color(backgroundColor));
@@ -367,32 +366,7 @@ void Overlay::RenderEsp()
 					//	ImVec2 textPosition(players[i].boxMiddle, (players[i].b_y - players[i].height - 15));
 					//	String(textPosition, textColor, players[i].name);
 
-						}
-
-					//if (v.player_level) {
-						//ImVec4 backgroundColor = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
-						//ImU32 textColor = GetContrastColor(GetImU32Color(backgroundColor));
-
-						//ImVec2 textPosition(players[i].boxMiddle, (players[i].b_y - players[i].height - 15));
-
-						// Fetch the XP level for the player
-						//int xp_level = players[i].xp_level;
-						//int player_level = players[i].player_level;
-
-						// Debugging statement to log the XP level being displayed
-						//std::cout << "Player " << playerName << " XP level: " << xp_level << std::endl;
-						// Concatenate the XP level to the player's name
-						//std::string playerInfo = playerName + " (Lvl: " + std::to_string(xp_level) + ")";
-						//std::string playerInfo = playerName + " (Lvl: " + std::to_string(players[i].xp_level / 18000 + 1) + ")";
-						//std::string playerInfo = playerName + " (Lvl: " + std::to_string(player_level) + ")";
-
-						//std::string playerInfo = std::to_string(player_level);
-
-						// Draw the player's name with level
-						//ImGui::GetWindowDrawList()->AddText(textPosition, textColor, playerInfo.c_str());
-					//}
-					////////////////////
-				
+						}				
 				}
 			}
 
@@ -635,7 +609,6 @@ int main(int argc, char** argv)
 		{
 			k_f10 = 0;
 		}
-		///////////////////////////////////////
 
 		if (IsKeyDown(VK_LEFT))
 		{
@@ -661,14 +634,6 @@ int main(int argc, char** argv)
 			k_del = 0;
 		}
 		
-		////////////////////////////////////////////////////
-		//if (IsKeyDown(SuperKey)) {
-		//	startSg = true;
-		//}
-		//else {
-		//	startSg = false;
-		//}
-
 		////////////////////////////////////NORMAL AIM & BUTTON///////////////////////////////////////
 		if (IsKeyDown(aim_key) || IsKeyDown(aim_key2))
 		{
@@ -680,15 +645,6 @@ int main(int argc, char** argv)
 			aiming = false;
 		}
 		
-		//if (IsKeyDown(shoot_key))
-		//{
-		//	shooting = true;
-		//	randomBone();//RANDOMIZE BONE WHEN SHOOT
-		//}
-		//else
-		//{
-		//	shooting = false;
-		//}
 	}
 	ready = false;
 	ov1.Clear();

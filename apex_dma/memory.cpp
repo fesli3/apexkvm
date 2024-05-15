@@ -82,53 +82,57 @@ void Memory::open_proc(const char* name)
         conn = inventory_create_connector(inv, "qemu_procfs", "");
         inventory_free(inv);
     }
-	    if (conn)
+    if (conn)
     {
         if(!kernel)
         {
             kernel = kernel_build(conn);
         }
-	            if(kernel)
+        if(kernel)
         {
             Kernel *tmp_ker = kernel_clone(kernel);
-		    proc.hProcess = kernel_into_process(tmp_ker, name);
+            proc.hProcess = kernel_into_process(tmp_ker, name);
         }
 
         if (proc.hProcess)
         {
-			Win32ModuleInfo *module = process_module_info(proc.hProcess, name);
+            Win32ModuleInfo *module = process_module_info(proc.hProcess, name);
 
-			if (module)
+            if (module)
             {
-				OsProcessModuleInfoObj *obj = module_info_trait(module);
-				proc.baseaddr = os_process_module_base(obj);
-				os_process_module_free(obj);
-				mem = process_virt_mem(proc.hProcess);
-		    /////////////////////////////////CR3 FIX//////////////////////////////
-	//修复cr3
-    const short MZ_HEADER = 0x5a4d;
-    char *base_section = new char[8];
-    long *base_section_value= (long *)base_section;
-    memset(base_section, 0, 8);
-    CSliceMut<uint8_t> slice(base_section, 8);
-    os.read_raw_into(proc.hProcess.info()->address + 0x520, slice); //win10
-    proc.baseaddr=*base_section_value;
-    	//遍历dtb
-    for (size_t dtb = 0; dtb < SIZE_MAX; dtb += 0x1000){
-        proc.hProcess.set_dtb(dtb, Address_INVALID);
-        short c5;
-        Read<short>(*base_section_value,c5);
-            if(c5==MZ_HEADER){
-	break;
-            }
-        }
-	////////////////////////////////////END/////////////////////////////////// 
+                OsProcessModuleInfoObj *obj = module_info_trait(module);
+                proc.baseaddr = os_process_module_base(obj);
+                os_process_module_free(obj);
+                mem = process_virt_mem(proc.hProcess);
+
+                // CR3 Fix
+                const short MZ_HEADER = 0x5a4d;
+                char *base_section = new char[8];
+                long *base_section_value = (long *)base_section;
+                memset(base_section, 0, 8);
+                CSliceMut<uint8_t> slice(base_section, 8);
+                os.read_raw_into(proc.hProcess.info()->address + 0x520, slice); //win10
+                proc.baseaddr = *base_section_value;
+
+                // Iterate through DTB
+                for (size_t dtb = 0; dtb < SIZE_MAX; dtb += 0x1000)
+                {
+                    proc.hProcess.set_dtb(dtb, Address_INVALID);
+                    short c5;
+                    Read<short>(*base_section_value, c5);
+                    if (c5 == MZ_HEADER)
+                    {
+                        break;
+                    }
+                }
+                // End CR3 Fix
+
                 status = process_status::FOUND_READY;
             }
             else
             {
                 status = process_status::FOUND_NO_ACCESS;
-				close_proc();
+                close_proc();
             }
         }
         else
@@ -139,7 +143,7 @@ void Memory::open_proc(const char* name)
     else
     {
         printf("Can't create connector\n");
-		exit(0);
+        exit(0);
     }
 }
 

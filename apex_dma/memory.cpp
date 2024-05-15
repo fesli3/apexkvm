@@ -74,19 +74,36 @@ void Memory::check_proc()
 	}
 }
 
-int Memory::open_proc(const char *name) {
-  int ret;
-  const char *target_proc=name;
-  const char *target_module = name;
- 
-  if (!(ret = os.process_by_name(CSliceRef<uint8_t>(target_proc),
-                                &proc.hProcess))) {
-    const struct ProcessInfo *info = proc.hProcess.info();
+void Memory::open_proc(const char* name)
+{
+    if(!conn)
+    {
+        ConnectorInventory *inv = inventory_scan();
+        conn = inventory_create_connector(inv, "qemu_procfs", "");
+        inventory_free(inv);
+    }
+	    if (conn)
+    {
+        if(!kernel)
+        {
+            kernel = kernel_build(conn);
+        }
+	            if(kernel)
+        {
+            Kernel *tmp_ker = kernel_clone(kernel);
+		    proc.hProcess = kernel_into_process(tmp_ker, name);
+        }
 
-    std::cout << target_proc << xorstr_(" process found: 0x") << std::hex
-              << info->address << xorstr_("] ") << info->pid << " "
-              << info->name << " " << info->path << std::endl;
-    
+        if (proc.hProcess)
+        {
+			Win32ModuleInfo *module = process_module_info(proc.hProcess, name);
+
+			if (module)
+            {
+				OsProcessModuleInfoObj *obj = module_info_trait(module);
+				proc.baseaddr = os_process_module_base(obj);
+				os_process_module_free(obj);
+				mem = process_virt_mem(proc.hProcess);
 		    /////////////////////////////////CR3 FIX//////////////////////////////
 	//修复cr3
     const short MZ_HEADER = 0x5a4d;
@@ -106,11 +123,24 @@ int Memory::open_proc(const char *name) {
             }
         }
 	////////////////////////////////////END/////////////////////////////////// 
-      status = process_status::FOUND_READY;
-  } else {
-    status = process_status::NOT_FOUND;
-  }
-  return ret;
+                status = process_status::FOUND_READY;
+            }
+            else
+            {
+                status = process_status::FOUND_NO_ACCESS;
+				close_proc();
+            }
+        }
+        else
+        {
+            status = process_status::NOT_FOUND;
+        }
+    }
+    else
+    {
+        printf("Can't create connector\n");
+		exit(0);
+    }
 }
 
 void Memory::close_proc()

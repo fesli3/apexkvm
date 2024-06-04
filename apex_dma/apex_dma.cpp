@@ -206,12 +206,9 @@ void ProcessPlayer(Entity& LPlayer, Entity& target, uint64_t entitylist, int ind
 
 	if (!target.isAlive())
 	{
-		float localyaw = LPlayer.GetYaw();
-		float targetyaw = target.GetYaw();
-
-		if(localyaw==targetyaw)
+		if(target.Observing(LPlayer.ptr))
 		{
-			if(LPlayer.getTeamId() == entity_team)
+			if (LPlayer.getTeamId() == entity_team)
 				tmp_all_spec++;
 			else
 				tmp_spec++;
@@ -293,7 +290,6 @@ void DoActions()
 	while (actions_t)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		uint32_t counter = 0;
 
 		while (g_Base!=0 && c_Base!=0)
 		{
@@ -577,22 +573,8 @@ if (isGrappling && grappleAttached == 1) {
 				}
 			}
 
-			if(!spectators && !allied_spectators)
-			{
-				spectators = tmp_spec;
-				allied_spectators = tmp_all_spec;
-			}
-			else
-			{
-				//refresh spectators count every ~2 seconds
-				counter++;
-				if(counter==70)
-				{
-					spectators = tmp_spec;
-					allied_spectators = tmp_all_spec;
-					counter = 0;
-				}
-			}
+			spectators = tmp_spec;
+			allied_spectators = tmp_all_spec;
 
 			if(!lock){
 				aimentity = tmp_aimentity;

@@ -68,7 +68,7 @@ public:
 	void SetViewAngles(QAngle& angles);
 	Vector getBonePosition(int id);
 	Vector getBonePositionByHitbox(int id);
-	bool Observing(uint64_t entitylist);
+	bool Observing(uint64_t local)
 	void get_name(uint64_t g_Base, uint64_t index, char* name);
 	//void get_name(char *name);
 	float lastCrossHairTime();

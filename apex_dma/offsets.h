@@ -66,10 +66,10 @@
 #define OFFSET_AMMO 0x1554 //[RecvTable.DT_PropSurvival].m_ammoInClip updated 2024/04/22
  
 //#define OFFSET_ITEM_GLOW 0x02f0 //m_highlightFunctionBits
-#define OFFSET_ITEM_ID 0x1558 //[RecvTable.DT_PropSurvival].m_customScriptInt updated 2024/04/22
+#define OFFSET_ITEM_ID 0x1568 //[RecvTable.DT_PropSurvival].m_customScriptInt updated 6/26/2024
 #define OFFSET_MODELNAME 0x0030 //[DataMap.C_BaseEntity].m_ModelName updated 2024/04/22
 #define OFFSET_M_CUSTOMSCRIPTINT OFFSET_ITEM_ID //[RecvTable.DT_PropSurvival].m_customScriptInt updated 2024/04/22
-#define OFFSET_YAW 0x223c - 0x8 //[DataMap.C_Player].m_currentFramePlayer.m_ammoPoolCount - 0x8 updated 2024/04/22
+#define OFFSET_YAW 0x224c - 0x8 //[DataMap.C_Player].m_currentFramePlayer.m_ammoPoolCount - 0x8 updated 6/26/2024
  
 //#define OFFSET_GLOW_T1 0x262+ 0x30 //16256 = enabled, 0 = disabled
 //#define OFFSET_GLOW_T2 0x2dc+ 0x30 //1193322764 = enabled, 0 = disabled
@@ -90,7 +90,7 @@
 #define GLOW_TYPE 0x29c // Script_Highlight_GetState + 4 updated 01/10/2024
 #define GLOW_COLOR 0x1D0+ 0x30 // Script_CopyHighlightState 15th mov updated 01/10/2024
 #define GLOW_FADE 0x388+ 0x30 // ats 3rd result of 3 offsets consecutive or first + 8 updated 01/10/2024
-#define HIGHLIGHT_SETTINGS 0xBB247D0 //?  //updated 2024/04/22
+#define HIGHLIGHT_SETTINGS 0xb0d8f70 //[Miscellaneous].HighlightSettings                       //updated 6/26/2024
 #define HIGHLIGHT_TYPE_SIZE 0x34 //? updated 01/10/2024
 #define OFFSET_CROSSHAIR_LAST OFFSET_VISIBLE_TIME + 0x1998 //[Miscellaneous].CWeaponX!lastCrosshairTargetTime updated 2024/04/22
 //#define OFFSET_CROSSHAIR_START 0x1958 //CPlayer!crosshairTargetStartTime updated 01/9/2024

@@ -25,7 +25,7 @@
 #define OFFSET_VIEW_OFFSET 0x00e8 //[DataMap.C_BaseEntity].m_currentFrame.viewOffset updated 2024/06/26
 #define OFFSET_ACTIVE_WEAPON 0x18d8 + 0x0058 //[RecvTable.DT_Player].m_inventory + WeaponInventory_Client>activeWeapons updated 2024/06/26
 
-#define OFFSET_SPECTATOR_LIST 0x1ef9c58;
+#define OFFSET_SPECTATOR_LIST 0x1ef9c58 //? updated 2024/06/26
 
 #define OFFSET_IN_DUCKSTATE 0x2a70 //[DataMap.C_Player].m_duckState updated 2024/06/26
 

@@ -80,9 +80,10 @@
 #define GLOW_START_TIME 0x02c8 + 0x30 //m_playerFloatLookStartTime=0x02c4 //updated 01/10/2024 DataMap.C_PlayerLocalData
 #define OFFSET_HIGHLIGHTSERVERACTIVESTATES 0x298 //updated 11/1/2023
 
-#define OFFSET_GLOW_FIX 0x268 // updated 1/10/2024 
-#define GLOW_VISIBLE_TYPE 0x26c
+#define OFFSET_GLOW_FIX 0x278        //updated 6/26/2024 
+#define GLOW_VISIBLE_TYPE 0x27c      // updated 1/25/2024
 #define OFFSET_GLOW_ENABLE_GLOW_CONTEXT OFFSET_GLOW_ENABLE // Script_Highlight_SetCurrentContext updated 01/10/2024
+#define OFFSET_GLOW_CONTEXT_ID 0x29c                                            //updated 6/26/2024
 #define OFFSET_GLOW_THROUGH_WALLS_GLOW_VISIBLE_TYPE OFFSET_GLOW_THROUGH_WALLS // Script_Highlight_SetVisibilityType 5th mov updated 01/10/2024
 #define GLOW_LIFE_TIME 0x3A4+ 0x30 // Script_Highlight_SetLifeTime + 4 updated 01/10/2024
 #define GLOW_DISTANCE 0x26c // Script_Highlight_SetFarFadeDist updated 01/10/2024

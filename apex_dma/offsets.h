@@ -1,4 +1,4 @@
-#define GameVersion v3.0.75.30 //[Miscellaneous].GameVersion updated 2024/08/06
+#define GameVersion v3.0.76.22 //[Miscellaneous].GameVersion updated 2024/08/06
 #define OFFSET_ENTITYLIST 0x1f14e08 //[Miscellaneous].cl_entitylist updated 2024/08/06
 #define OFFSET_LOCAL_ENT 0x23e7ff8 //[Miscellaneous].LocalPlayer updated 2024/08/06
 #define OFFSET_NAME_LIST 0xd34f2c0 //[Miscellaneous].NameList updated 2024/08/06

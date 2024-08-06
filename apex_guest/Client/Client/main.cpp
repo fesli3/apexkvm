@@ -8,7 +8,7 @@
 #include <fstream>
 #include <iostream>
 //test contraste texte
-#include "C:\Users\di3go\Documents\OKVM\apex_guest\Client\Client\imgui\imgui.h"
+#include "C:\Users\kaos\Documents\me\OKVM\apex_guest\Client\Client\imgui\imgui.h"
 
 typedef struct player
 {
@@ -54,15 +54,15 @@ bool aiming = false; //read
 uint64_t g_Base = 0; //write
 float max_dist = 110.0f * 40.0f;
 //float esp_distance = 300.0f * 40.0f;
-float smooth = 160.00f;
-float max_fov = 3.00f;
+float smooth = 100.00f;
+float max_fov = 5.00f;
 int bone = 2;
 //int SuperKey = VK_LSHIFT;
 //static bool startSg = false;
 
 //float esp_distance = 300.0f; // Units in meters
 
-float DDS = 100.0f * 40.0f; //need test 25 before for closets targets but seem to be wrong
+float DDS = 80.0f * 40.0f; //need test 25 before for closets targets but seem to be wrong
 //float EBD = 300.0f * 40.0f; //distance for seer esp and box esp
 
 bool firing_range = false;
@@ -254,6 +254,24 @@ void Overlay::RenderEsp()
 			ImGui::SetNextWindowSize(ImVec2((float)getWidth(), (float)getHeight()));
 			ImGui::Begin(XorStr("##esp"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
+			// Constants for minimum and maximum values
+			const float MIN_MAX_FOV = 5.00f;
+			const float MAX_MAX_FOV = 45.00f;
+			const float MIN_SMOOTH = 70.00f;
+			const float MAX_SMOOTH = 100.00f;
+			float max_fov = 5.00f;
+			float smooth = 100.00f;
+			const float SMOOTHING_FACTOR = 0.1f;
+
+			auto interpolate = [](float min, float max, float factor) {
+				return min + factor * (max - min);
+				};
+
+			auto lerp = [](float a, float b, float t) {
+				return a + t * (b - a);
+				};
+
+
 			for (int i = 0; i < 100; i++)
 			{
 				if (players[i].health > 0)
@@ -280,39 +298,23 @@ void Overlay::RenderEsp()
 					// Define the maximum distance you want to consider (previously referred to as max_distance)
 					//float max_dist = 80.0f * 40.0f; // Adjust this value as per your requirement
 
-					// Calculate a scaling factor based on the player's distance
-					float distanceFactor = 1.0f - (players[i].dist / max_dist);
+					float distanceFactor = (max_dist > 0) ? 1.0f - (players[i].dist / max_dist) : 0.0f;
+					distanceFactor = (distanceFactor < 0.0f) ? 0.0f : (distanceFactor > 1.0f) ? 1.0f : distanceFactor;
 
-					// Define the minimum and maximum values for max_fov, cfsize, and smooth
-					const float min_max_fov = 5.00f;
-					const float max_max_fov = 12.00f;
-					const float min_cfsize = min_max_fov;
-					const float max_cfsize = max_max_fov;
-					const float min_smooth = 90.00f;
-					const float max_smooth = 150.00f;
+					bool isCloseRange = (players[i].dist < DDS);
 
-					// Smoothly interpolate the adjusted values based on the distance factor
-					float adjusted_max_fov = min_max_fov + distanceFactor * (max_max_fov - min_max_fov);
-					float adjusted_cfsize = min_cfsize + distanceFactor * (max_cfsize - min_cfsize);
-					float adjusted_smooth = min_smooth + distanceFactor * (max_smooth - min_smooth);
+					float newMaxFov = isCloseRange ? interpolate(MIN_MAX_FOV, MAX_MAX_FOV, distanceFactor) : max_fov;
+					float newCfsize = isCloseRange ? newMaxFov : max_fov;
+					float newSmooth = isCloseRange ? interpolate(MIN_SMOOTH, MAX_SMOOTH, distanceFactor) : smooth;
 
-					// Check the distance condition and update the values accordingly
-					if (players[i].dist < DDS) // DDS at top as before
-					{
-						max_fov = adjusted_max_fov;
-						cfsize = adjusted_cfsize;
-						aim_key = true; // You can set this based on your needs
-						aim_key2 = true;
-						smooth = adjusted_smooth;
-					}
-					else
-					{
-						max_fov = 3.00; //adjusted_max_fov;
-						cfsize = max_fov;
-						aim_key = true; // You can set this based on your needs
-						aim_key2 = false;
-						smooth = 160.00f; //adjusted_smooth;
-					}
+					// Apply smoothing
+					max_fov = lerp(max_fov, newMaxFov, SMOOTHING_FACTOR);
+					cfsize = lerp(cfsize, newCfsize, SMOOTHING_FACTOR);
+					smooth = lerp(smooth, newSmooth, SMOOTHING_FACTOR);
+
+					aim_key = true;
+					aim_key2 = isCloseRange;
+
 
 					//if(v.line)
 					//	DrawLine(ImVec2((float)(getWidth() / 2), (float)getHeight()), ImVec2(players[i].b_x, players[i].b_y), BLUE, 1); //LINE FROM MIDDLE SCREEN

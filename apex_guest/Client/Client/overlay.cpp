@@ -527,7 +527,7 @@ DWORD Overlay::CreateOverlay()
 		{
 			ImGui::Begin("##circlefov", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar);
 			auto draw = ImGui::GetBackgroundDrawList();
-			draw->AddCircle(ImVec2(1920 / 2, 1080         / 2), cfsize, IM_COL32(255, 0, 0, 255), 100, 1.0f);
+			draw->AddCircle(ImVec2(2560 / 2, 1440         / 2), cfsize, IM_COL32(255, 0, 0, 255), 100, 2.0f);
 			ImGui::End();
 		}
 		RenderEsp();
@@ -641,10 +641,10 @@ void Overlay::DrawLine(ImVec2 a, ImVec2 b, ImColor color, float width)
 
 void Overlay::DrawBox(ImColor color, float x, float y, float w, float h)
 {
-	DrawLine(ImVec2(x, y), ImVec2(x + w, y), color, 1.0f);
-	DrawLine(ImVec2(x, y), ImVec2(x, y + h), color, 1.0f);
-	DrawLine(ImVec2(x + w, y), ImVec2(x + w, y + h), color, 1.0f);
-	DrawLine(ImVec2(x, y + h), ImVec2(x + w, y + h), color, 1.0f);
+	DrawLine(ImVec2(x, y), ImVec2(x + w, y), color, 2.0f);
+	DrawLine(ImVec2(x, y), ImVec2(x, y + h), color, 2.0f);
+	DrawLine(ImVec2(x + w, y), ImVec2(x + w, y + h), color, 2.0f);
+	DrawLine(ImVec2(x, y + h), ImVec2(x + w, y + h), color, 2.0f);
 }
 
 void Overlay::Text(ImVec2 pos, ImColor color, const char* text_begin, const char* text_end, float wrap_width, const ImVec4* cpu_fine_clip_rect)

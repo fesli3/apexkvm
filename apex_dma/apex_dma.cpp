@@ -10,6 +10,8 @@
 #include <thread>
 #include <array>
 #include <fstream>
+////////////////////////
+////////////////////////
 
 Memory apex_mem;
 Memory client_mem;
@@ -165,11 +167,17 @@ int tmp_all_spec = 0, allied_spectators = 0;
 int settingIndex;
 int contextId;
 std::array<float, 3> highlightParameter;
+///////////
 
+//TEST//
+//ENDTEST//
+/////////////
+
+//////////////////////////////////////////
 //works
 // Inside SetPlayerGlow function
-    void SetPlayerGlow(Entity& LPlayer, Entity& Target, int index)
-    {
+void SetPlayerGlow(Entity& LPlayer, Entity& Target, int index)
+{
     	if (player_glow >= 1)
     	{
     			if (!Target.isGlowing() || (int)Target.buffer[OFFSET_GLOW_THROUGH_WALLS_GLOW_VISIBLE_TYPE] != 1) {
@@ -177,19 +185,19 @@ std::array<float, 3> highlightParameter;
     				if (!isnan(currentEntityTime) && currentEntityTime > 0.f) {
     					if (!(firing_range) && (Target.isKnocked() || !Target.isAlive()))
     					{
-    						contextId = 14;
+    						contextId = 5;
     						settingIndex = 80;
     						highlightParameter = { glowrknocked, glowgknocked, glowbknocked };
     					}
     					else if (Target.lastVisTime() > lastvis_aim[index] || (Target.lastVisTime() < 0.f && lastvis_aim[index] > 0.f))
     					{
-    						contextId = 15;
+    						contextId = 6;
     						settingIndex = 81;
     						highlightParameter = { glowrviz, glowgviz, glowbviz };
     					}
     					else 
     					{
-    						contextId = 16;
+    						contextId = 7;
     						settingIndex = 82;
     						highlightParameter = { glowr, glowg, glowb };
     					}
@@ -198,12 +206,31 @@ std::array<float, 3> highlightParameter;
     			}
     	}
     	
- }   
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ProcessPlayer(Entity& LPlayer, Entity& target, uint64_t entitylist, int index)
 {
 	int entity_team = target.getTeamId();
+	bool obs = target.Observing(entitylist);
 
+	if (obs)
+	{
+		/*if(obs == LPlayer.ptr)
+		{
+			if (entity_team == team_player)
+			{
+				tmp_all_spec++;
+			}
+			else
+			{
+				tmp_spec++;
+			}
+		}*/
+		tmp_spec++;
+		return;
+	}
+	
 	if (!target.isAlive())
 	{
 		if(target.Observing(LPlayer.ptr))
@@ -242,6 +269,9 @@ void ProcessPlayer(Entity& LPlayer, Entity& target, uint64_t entitylist, int ind
 				aimentity=tmp_aimentity=lastaimentity=0;
 			}
 		}
+
+//////////////
+//////////////
 	}
 	else
 	{
@@ -282,10 +312,21 @@ void updateInsideValue()
 	updateInsideValue_t = false;
 } */
 ////////////////////////////////////////
+	int onWallTmp = 0;
+	int wallJumpNow = 0;
+	int onWallOffTmp = 0;
+	float onEdgeTmp = 0;
+
+	//bool autoWallJumpEnabled = true; // Initialize auto wall jump as enabled
+////////////////////////////////////////
 
 void DoActions()
 {
 	actions_t = true;
+
+///////////////
+
+//////////////
 
 	while (actions_t)
 	{
@@ -309,61 +350,63 @@ void DoActions()
 
 			uint64_t entitylist = g_Base + OFFSET_ENTITYLIST;
 
-//TEST//
-	int onWallTmp = 0;
-	int wallJumpNow = 0;
-	int onWallOffTmp = 0;
-	float onEdgeTmp = 0;
-//ENDTEST//
+//////////////////////////////////
 
-// Added walljump logic
-int onWall = 0; apex_mem.Read<int>(LocalPlayer + OFFSET_WALL_RUN_START_TIME, onWall);
-if (onWall != onWallTmp)
-{
-    int tmp;
-    if (apex_mem.Read<int>(g_Base + OFFSET_IN_FORWARD, tmp) == 0)
+///////////////////////////////////////
+    bool success; // Declare success once
+    int onWall;
+    // Corrected memory read call
+    success = apex_mem.Read<int>(LocalPlayer + OFFSET_WALL_RUN_START_TIME, onWall);
+    if (success && onWall != onWallTmp)
     {
-        wallJumpNow = 1;
-        apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 5);
+        int inForward;
+        success = apex_mem.Read<int>(g_Base + OFFSET_IN_FORWARD, inForward);
+        if (success && inForward == 0)  
+        {
+            wallJumpNow = 1;
+            apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 5);
+        }
     }
-}
-onWallTmp = onWall;
+    onWallTmp = onWall;
 
-int onWallOff = 0;
-apex_mem.Read<int>(LocalPlayer + OFFSET_WALL_RUN_CLEAR_TIME, onWallOff);
-if (wallJumpNow == 1)
-{
-    if (onWallOff != onWallOffTmp)
+    int onWallOff;
+    success = apex_mem.Read<int>(LocalPlayer + OFFSET_WALL_RUN_CLEAR_TIME, onWallOff);
+    if (success && wallJumpNow == 1 && onWallOff != onWallOffTmp)
     {
         wallJumpNow = 0;
         apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 4);
     }
-}
-onWallOffTmp = onWallOff;
+    onWallOffTmp = onWallOff;
 
-float onEdge = 0.0f;
-apex_mem.Read<float>(LocalPlayer + OFFSET_TRAVERSAL_PROGRESS, onEdge);
-if (onEdge != onEdgeTmp)
-{
-    int tmp;
-    if (apex_mem.Read<int>(g_Base + OFFSET_IN_FORWARD, tmp) == 0)
+    float onEdge;
+    success = apex_mem.Read<float>(LocalPlayer + OFFSET_TRAVERSAL_PROGRESS, onEdge);
+    if (success && onEdge != onEdgeTmp)
     {
-        wallJumpNow = 2;
-        apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 5);
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        int inForward;
+        success = apex_mem.Read<int>(g_Base + OFFSET_IN_FORWARD, inForward);
+        if (success && inForward == 0)
+        {
+            wallJumpNow = 2;
+            apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 5);
+            // Consider the impact of sleep here, potentially remove or adjust
+            // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
     }
-}
-onEdgeTmp = onEdge;
+    onEdgeTmp = onEdge;
 
-if (wallJumpNow == 2)
-{
-    uint32_t tmp;
-    if ((apex_mem.Read<uint32_t>(LocalPlayer + OFFSET_FLAGS, tmp) & 0x1) == 1)
+    if (wallJumpNow == 2)
     {
-        wallJumpNow = 0;
-        apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 4);
+        uint32_t flags;
+        success = apex_mem.Read<uint32_t>(LocalPlayer + OFFSET_FLAGS, flags);
+        if (success && (flags & 0x1) == 1)
+        {
+            wallJumpNow = 0;
+            apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 4);
+        }
     }
-}
+
+/////////////////
+
     // SUPERGLIDE
 
     static float startjumpTime = 0;
@@ -435,6 +478,11 @@ if (wallJumpNow == 2)
     break;
   }
 //}
+    //////////////////////////////
+
+////////////////////////////////
+//WALLJUMP LOGIC
+////////////////////////////////
 
 // Check if grapple is active
 apex_mem.Read<bool>(LocalPlayer + OFFSET_GRAPPLEACTIVED, isGrappling);
@@ -459,6 +507,7 @@ if (isGrappling && grappleAttached == 1) {
 }
 
 ///////////////////////////////
+
 //if (bhop_enable) {
 //  apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 5);
 //  std::this_thread::sleep_for(std::chrono::milliseconds(1)); 
@@ -548,7 +597,7 @@ if (isGrappling && grappleAttached == 1) {
 
 					// Print spectator list
 					if (strlen(spectator_list[i].name) > 0) {
-    					//printf("Spectator name: %s\n", spectator_list[i].name);
+    					printf("Spectator name: %s\n", spectator_list[i].name);
 					//std::cout << "Corresponding level: " << player_level << std::endl;
 					}
 //////////////////
@@ -586,6 +635,7 @@ if (isGrappling && grappleAttached == 1) {
 
 	actions_t = false;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 player players[toRead];
 
@@ -690,12 +740,12 @@ static void EspLoop()
 						}
 						
 						Vector bs = Vector();
-						WorldToScreen(EntityPosition, m.matrix, 1920, 1080, bs);
+						WorldToScreen(EntityPosition, m.matrix, 2560, 1440, bs);
 						if (bs.x > 0 && bs.y > 0)
 						{
 							Vector hs = Vector();
 							Vector HeadPosition = Target.getBonePositionByHitbox(0);
-							WorldToScreen(HeadPosition, m.matrix, 1920, 1080, hs);
+							WorldToScreen(HeadPosition, m.matrix, 2560, 1440, hs);
 							float height = abs(abs(hs.y) - abs(bs.y));
 							float width = height / 2.0f;
 							float boxMiddle = bs.x - (width / 2.0f);
@@ -779,12 +829,12 @@ static void EspLoop()
 						}
 
 						Vector bs = Vector();
-						WorldToScreen(EntityPosition, m.matrix, 1920, 1080, bs);
+						WorldToScreen(EntityPosition, m.matrix, 2560, 1440, bs);
 						if (bs.x > 0 && bs.y > 0)
 						{
 							Vector hs = Vector();
 							Vector HeadPosition = Target.getBonePositionByHitbox(0);
-							WorldToScreen(HeadPosition, m.matrix, 1920, 1080, hs);
+							WorldToScreen(HeadPosition, m.matrix, 2560, 1440, hs);
 							float height = abs(abs(hs.y) - abs(bs.y));
 							float width = height / 2.0f;
 							float boxMiddle = bs.x - (width / 2.0f);
@@ -1037,6 +1087,8 @@ if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*26, shooting_addr)) {
   printf("Read failed!\n"); 
 }
 
+////////
+
 uint64_t onevone_addr = 0;
 printf("Reading onevone address: %lx\n", add_addr + sizeof(uint64_t)*27);
 if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*27, onevone_addr)) {
@@ -1048,6 +1100,8 @@ printf("Reading spec_list address: %lx\n", add_addr + sizeof(uint64_t)*28);
 if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*28, spec_list_addr)) {
   printf("Read failed!\n");
 }
+
+////////
 
 	uint32_t check = 0;
 	client_mem.Read<uint32_t>(check_addr, check);
@@ -1143,7 +1197,7 @@ int main(int argc, char *argv[])
 	//const char* ap_proc = "EasyAntiCheat_launcher.exe";
 
 	//Client "add" offset
-	uint64_t add_off = 0x1fc930; //0x1fb930;
+	uint64_t add_off = 0x1fe9b0 ; //0x1fe9b0; //0x1fb930; //0x1fc930; //0x1fb930; //0x1fc930; //0x1fb930; //0x203950; //0x1fb950; //0x1ec610;
 
 	std::thread aimbot_thr;
 	std::thread esp_thr;

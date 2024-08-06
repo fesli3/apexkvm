@@ -33,7 +33,7 @@ bool Entity::Observing(uint64_t localptr)
 	apex_mem.Read<int>(ptr + 0x38, PlayerData);
 
 	int SpecIndex;
-	apex_mem.Read<int>(SpectatorList + PlayerData * 8 + 0x964, SpecIndex);
+	apex_mem.Read<int>(SpectatorList + PlayerData * 8 + 0x974, SpecIndex);
 
 	uint64_t SpectatorAddr;
 	apex_mem.Read<uint64_t>(apex_mem.get_proc_baseaddr() + OFFSET_ENTITYLIST + ((SpecIndex & 0xFFFF) << 5), SpectatorAddr);
@@ -62,6 +62,7 @@ void get_class_name(uint64_t entity_ptr, char* out_str)
 	apex_mem.ReadArray<char>(client_class.pNetworkName, out_str, 32);
 }
 
+//////////////////////////////////
 void InState::update(uint32_t address)
 {
 	extern uint64_t g_Base;
@@ -93,6 +94,9 @@ void InState::post(uint32_t address)
 	}
 }
 
+//////////////////////////////////
+
+//////////////////////////////////
 uint32_t button_state[4];
 
 bool isPressed(uint32_t button_code)
@@ -159,6 +163,7 @@ bool Entity::isAlive()
 	return *(int*)(buffer + OFFSET_LIFE_STATE) == 0;
 }
 
+/////////////////////////////////
 bool Entity::isOnGround() 
 {
 	uint32_t flags;
@@ -171,16 +176,19 @@ bool Entity::isInSkydive()
 {
 	return *(int*)(buffer + OFFSET_SKYDIVE_STATE) > 0;
 }
+/////////////////////////////////
 
 float Entity::lastVisTime()
 {
   return *(float*)(buffer + OFFSET_VISIBLE_TIME);
 }
 
+///////////////////////////////
 float Entity::lastCrossHairTime()
 {
 	return *(float*)(buffer + OFFSET_CROSSHAIR_LAST);
 }
+///////////////////////////////
 
 Vector Entity::getBonePosition(int id)
 {
@@ -274,6 +282,9 @@ bool Entity::isZooming()
 }
 
 /////////////////////////
+/////////////////////////
+
+/////////////////////////
     extern uint64_t g_Base;
     extern int settingIndex;
     extern int contextId;
@@ -348,7 +359,8 @@ void Entity::get_name(uint64_t g_Base, uint64_t index, char* name)
 	apex_mem.ReadArray<char>(name_ptr, name, 32);
 }
 
-int Entity::read_xp_level() {
+////test////
+    int Entity::read_xp_level() {
      
      
       int xp = 0;
@@ -593,6 +605,9 @@ void WeaponXEntity::update(uint64_t LocalPlayer)
 	ammo = 0;
     apex_mem.Read<int>(wep_entity + OFFSET_AMMO, ammo);
 }
+
+//////////////////////
+//////////////////////
 
 float WeaponXEntity::get_projectile_speed()
 {

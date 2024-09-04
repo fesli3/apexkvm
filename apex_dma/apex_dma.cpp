@@ -311,14 +311,14 @@ void updateInsideValue()
 	}
 	updateInsideValue_t = false;
 } */
-////////////////////////////////////////
+//walljump +//////////////////////////////////////
 	int onWallTmp = 0;
 	int wallJumpNow = 0;
 	int onWallOffTmp = 0;
 	float onEdgeTmp = 0;
 
 	//bool autoWallJumpEnabled = true; // Initialize auto wall jump as enabled
-////////////////////////////////////////
+//walljump *//////////////////////////////////////
 
 void DoActions()
 {
@@ -352,7 +352,7 @@ void DoActions()
 
 //////////////////////////////////
 
-///////////////////////////////////////
+//walljump ++/////////////////////////////////////
     bool success; // Declare success once
     int onWall;
     // Corrected memory read call
@@ -405,7 +405,7 @@ void DoActions()
         }
     }
 
-/////////////////
+//walljump ++///////////////
 
     // SUPERGLIDE
 
@@ -481,7 +481,7 @@ void DoActions()
     //////////////////////////////
 
 ////////////////////////////////
-//WALLJUMP LOGIC
+//WALLJUMP END
 ////////////////////////////////
 
 // Check if grapple is active
@@ -506,15 +506,16 @@ if (isGrappling && grappleAttached == 1) {
 
 }
 
-///////////////////////////////
+//grapple END/////////////////////////////
 
+//bhop///
 //if (bhop_enable) {
 //  apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 5);
 //  std::this_thread::sleep_for(std::chrono::milliseconds(1)); 
 //  apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 4);
 ////  std::this_thread::sleep_for(std::chrono::milliseconds(1));
 //}
-///////////////////////////////
+//bhop END/////////////////////////////
 
 			uint64_t baseent = 0;
 			apex_mem.Read<uint64_t>(entitylist, baseent);
@@ -1197,7 +1198,7 @@ int main(int argc, char *argv[])
 	//const char* ap_proc = "EasyAntiCheat_launcher.exe";
 
 	//Client "add" offset
-	uint64_t add_off = 0x1fe9b0 ; //0x1fe9b0; //0x1fb930; //0x1fc930; //0x1fb930; //0x1fc930; //0x1fb930; //0x203950; //0x1fb950; //0x1ec610;
+	uint64_t add_off = 0x1fe960; //0x1fe9b0 ; //0x1fe9b0; //0x1fb930; //0x1fc930; //0x1fb930; //0x1fc930; //0x1fb930; //0x203950; //0x1fb950; //0x1ec610;
 
 	std::thread aimbot_thr;
 	std::thread esp_thr;

@@ -44,8 +44,10 @@ public:
 	bool isPlayer();
 	bool isKnocked();
 	bool isAlive();
+/////////
 	bool isOnGround();
 	bool isInSkydive();
+/////////
 	float lastVisTime();
 	int getTeamId();
 	int getHealth();
@@ -68,10 +70,11 @@ public:
 	void SetViewAngles(QAngle& angles);
 	Vector getBonePosition(int id);
 	Vector getBonePositionByHitbox(int id);
-	bool Observing(uint64_t local)
+	bool Observing(uint64_t local);
 	void get_name(uint64_t g_Base, uint64_t index, char* name);
 	//void get_name(char *name);
 	float lastCrossHairTime();
+	////test////
 	int xp_level();
  
   	// private:
@@ -147,6 +150,8 @@ struct InState
 	void update(uint32_t address);
 	void post(uint32_t address);
 };
+
+///////////////////////////////////
 
 Entity getEntity(uintptr_t ptr);
 //Item getItem(uintptr_t ptr);

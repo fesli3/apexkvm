@@ -1,7 +1,7 @@
 #include "memory.h"
 
-//Credits: learn_more, stevemk14ebr
-size_t findPattern(const PBYTE rangeStart, size_t len, const char* pattern)
+// Credits: learn_more, stevemk14ebr
+size_t findPattern(const PBYTE rangeStart, size_t len, const char *pattern)
 {
 	size_t l = strlen(pattern);
 	PBYTE patt_base = static_cast<PBYTE>(malloc(l >> 1));
@@ -64,7 +64,7 @@ void Memory::check_proc()
 	if (status == process_status::FOUND_READY)
 	{
 		short c;
-        Read<short>(proc.baseaddr, c);
+		Read<short>(proc.baseaddr, c);
 
 		if (c != 0x5A4D)
 		{
@@ -74,90 +74,101 @@ void Memory::check_proc()
 	}
 }
 
-void Memory::open_proc(const char* name)
+bool kernel_init(Inventory *inv, const char *connector_name)
 {
-    if(!conn)
-    {
-        ConnectorInventory *inv = inventory_scan();
-        conn = inventory_create_connector(inv, "qemu_procfs", "");
-        inventory_free(inv);
-    }
-    if (conn)
-    {
-        if(!kernel)
-        {
-            kernel = kernel_build(conn);
-        }
-        if(kernel)
-        {
-            Kernel *tmp_ker = kernel_clone(kernel);
-            proc.hProcess = kernel_into_process(tmp_ker, name);
-        }
+	if (inventory_create_connector(inv, connector_name, "", conn.get()))
+	{
+		printf("Can't create %s connector\n", connector_name);
+		return false;
+	}
+	else
+	{
+		printf("%s connector created\n", connector_name);
+	}
 
-        if (proc.hProcess)
-        {
-            Win32ModuleInfo *module = process_module_info(proc.hProcess, name);
+	kernel = std::make_unique<OsInstance<>>();
+	if (inventory_create_os(inv, "win32", "", conn.get(), kernel.get()))
+	{
+		printf("Unable to initialize kernel using %s connector\n", connector_name);
+		connector_drop(conn.get());
+		kernel.reset();
+		return false;
+	}
 
-            if (module)
-            {
-                OsProcessModuleInfoObj *obj = module_info_trait(module);
-                proc.baseaddr = os_process_module_base(obj);
-                os_process_module_free(obj);
-                mem = process_virt_mem(proc.hProcess);
+	return true;
+}
 
-                // CR3 Fix
-                const short MZ_HEADER = 0x5a4d;
-                char *base_section = new char[8];
-                long *base_section_value = (long *)base_section;
-                memset(base_section, 0, 8);
-                CSliceMut<uint8_t> slice(base_section, 8);
-                os.read_raw_into(proc.hProcess.info()->address + 0x520, slice); //win10
-                proc.baseaddr = *base_section_value;
+void Memory::open_proc(const char *name)
+{
+	if (!conn)
+	{
+		conn = std::make_unique<ConnectorInstance<>>();
+		Inventory *inv = inventory_scan();
 
-                // Iterate through DTB
-                for (size_t dtb = 0; dtb < SIZE_MAX; dtb += 0x1000)
-                {
-                    proc.hProcess.set_dtb(dtb, Address_INVALID);
-                    short c5;
-                    Read<short>(*base_section_value, c5);
-                    if (c5 == MZ_HEADER)
-                    {
-                        break;
-                    }
-                }
-                // End CR3 Fix
+		printf("Init with qemu connector...\n");
+		if (!kernel_init(inv, "qemu"))
+		{
+			printf("Init with kvm connector...\n");
+			if (!kernel_init(inv, "kvm"))
+			{
+				printf("Quitting\n");
+				inventory_free(inv);
+				exit(1);
+			}
+		}
 
-                status = process_status::FOUND_READY;
-            }
-            else
-            {
-                status = process_status::FOUND_NO_ACCESS;
-                close_proc();
-            }
-        }
-        else
-        {
-            status = process_status::NOT_FOUND;
-        }
-    }
-    else
-    {
-        printf("Can't create connector\n");
-        exit(0);
-    }
+		printf("Kernel initialized: %p\n", kernel.get()->container.instance.instance);
+	}
+
+	ProcessInfo info;
+	info.dtb2 = Address_INVALID;
+
+	if (kernel.get()->process_info_by_name(name, &info))
+	{
+		status = process_status::NOT_FOUND;
+		return;
+	}
+
+	ProcessInstance<> tmp_proc;
+
+	if (kernel.get()->process_by_info(info, &tmp_proc))
+	{
+		status = process_status::NOT_FOUND;
+		return;
+	}
+
+	ModuleInfo module_info;
+
+	if (tmp_proc.module_by_name(name, &module_info))
+	{
+		printf("Can't find base module info for process %s. Trying with a new dtb...\n", name);
+
+		for (size_t dtb = 0; dtb <= SIZE_MAX; dtb += 0x1000)
+		{
+			info.dtb1 = dtb;
+			kernel.get()->process_by_info(info, &tmp_proc);
+
+			if (!tmp_proc.module_by_name(name, &module_info))		
+				break;
+
+			if (dtb == SIZE_MAX)
+			{
+				printf("Access error for process %s\n", name);
+				status = process_status::FOUND_NO_ACCESS;
+				return;
+			}
+		}
+	}
+
+	kernel.get()->clone().into_process_by_info(info, &proc.hProcess);
+
+	proc.baseaddr = module_info.base;
+	status = process_status::FOUND_READY;
 }
 
 void Memory::close_proc()
 {
-	if (proc.hProcess)
-	{
-		process_free(proc.hProcess);
-		virt_free(mem);	
-	}
-
-	proc.hProcess = 0;
 	proc.baseaddr = 0;
-	mem = 0;
 }
 
 uint64_t Memory::ScanPointer(uint64_t ptr_address, const uint32_t offsets[], int level)

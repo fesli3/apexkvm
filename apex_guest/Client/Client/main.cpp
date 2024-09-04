@@ -62,7 +62,7 @@ int bone = 2;
 
 //float esp_distance = 300.0f; // Units in meters
 
-float DDS = 80.0f * 40.0f; //need test 25 before for closets targets but seem to be wrong
+float DDS = max_dist; //80.0f * 40.0f; //need test 25 before for closets targets but seem to be wrong
 //float EBD = 300.0f * 40.0f; //distance for seer esp and box esp
 
 bool firing_range = false;
@@ -256,7 +256,7 @@ void Overlay::RenderEsp()
 
 			// Constants for minimum and maximum values
 			const float MIN_MAX_FOV = 5.00f;
-			const float MAX_MAX_FOV = 45.00f;
+			const float MAX_MAX_FOV = 65.00f;
 			const float MIN_SMOOTH = 70.00f;
 			const float MAX_SMOOTH = 100.00f;
 			float max_fov = 5.00f;

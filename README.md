@@ -7,6 +7,17 @@ Bone IDs reference: https://www.unknowncheats.me/wiki/Apex_Legends_Bones_and_Hit
 
 Game version (Steam): v3.0.79.44
 
+Added build_libmemflow.zip when you get stuk at :
+    Init with qemu connector...
+    Can't create qemu connector
+    Init with kvm connector...
+    Can't create kvm connector
+
+    - extract the 3 libmemflow files on the build folder (if build isn't there, you can create it by compiling aka sh build.sh or you can create manually a folder named "build").
+           + libmemflow_kvm.so
+           + libmemflow_qemu.so
+           + libmemflow_win32.so
+
 Windows 1903
 1920*1080 (old)
 2560*1440 by default

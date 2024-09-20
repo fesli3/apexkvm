@@ -51,6 +51,12 @@ extern float glowgknocked;
 extern float glowbknocked;
 extern float glowcolorknocked[3];
 
+//DDS
+extern float min_max_fov = 3.80f;
+extern float max_max_fov = 12.00f;
+extern float min_smooth = 90.00f;
+extern float max_smooth = 130.00f;
+
 int width;
 int height;
 bool k_leftclick = false;
@@ -179,26 +185,28 @@ void Overlay::RenderMenu()
 			ImGui::Text(XorStr("Max distance:"));
 			ImGui::SliderFloat(XorStr("##1"), &max_dist, 100.0f * 40, 800.0f * 40, "%.2f");
 			ImGui::SameLine();
-			ImGui::Text("(%d meters)", (int)(max_dist / 40));
+			ImGui::Text("%d meters", (int)(max_dist / 40));
 
 			ImGui::Text(XorStr("Smooth aim value:"));
-			ImGui::SliderFloat(XorStr("##2"), &smooth, 12.0f, 150.0f, "%.2f");
+			ImGui::SliderFloat(XorStr("##2"), &smooth, 12.0f, 250.0f, "%.2f");
 
 			ImGui::Text(XorStr("Max FOV:"));
-			ImGui::SliderFloat(XorStr("##3"), &max_fov, 5.0f, 250.0f, "%.2f");
+			ImGui::SliderFloat(XorStr("##3"), &max_fov, 3.80f, 250.0f, "%.2f");
 			
 			ImGui::Text(XorStr("Aim at (bone id):"));
 			ImGui::SliderInt(XorStr("##4"), &bone, 0, 175);
 			//TEST DDS
-			ImGui::Text(XorStr("DDS:"));
+			ImGui::Text(XorStr("Dynamic Distance Stuff:"));
 			ImGui::SliderFloat(XorStr("##DDS"), &DDS, 40.0f * 40, 800.0f * 40, "%.2f");
 			ImGui::SameLine();
-			ImGui::TextColored(GREEN, "%.0f ", DDS / 39.62);
-			//TEST EBD
+			//ImGui::TextColored(GREEN, "%.0f ", DDS / 39.62);
+			ImGui::Text("%d meters", (int)(DDS / 40));
+			//TEST CONFIG DDS
 			//ImGui::Text(XorStr("EBD:"));
-			//ImGui::SliderFloat(XorStr("##EBD"), &EBD, 40.0f * 40, 800.0f * 40, "%.2f");
-			//ImGui::SameLine();
-			//ImGui::TextColored(GREEN, "%.0f ", EBD / 39.62);
+			ImGui::SliderFloat(XorStr("##min_max_fov"), &min_max_fov, 3.80f, 250.0f, "%.2f");
+			ImGui::SliderFloat(XorStr("##max_max_fov"), &max_max_fov, 3.80f, 250.0f, "%.2f");
+			ImGui::SliderFloat(XorStr("##min_smooth"), &min_smooth, 12.0f, 250.0f, "%.2f");
+			ImGui::SliderFloat(XorStr("##max_smooth"), &max_smooth, 12.0f, 250.0f, "%.2f");
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem(XorStr("Visuals")))
@@ -364,24 +372,20 @@ void Overlay::RenderInfo()
 	//ImGui::SameLine();
 	ImGui::Text(XorStr("DDS :"));
 	ImGui::SameLine();
-	ImGui::TextColored(GREEN, "%.0f", DDS / 39.62); //meters
+	ImGui::Text("%d meters", (int)(DDS / 40));
+	ImGui::Checkbox(XorStr("Glow"), &player_glow);
 	ImGui::SameLine();
-	//ImGui::Text(XorStr("EBD :"));
-	//ImGui::SameLine();
-	//ImGui::TextColored(GREEN, "%.0f", EBD / 39.62); //meters
-	//ImGui::Checkbox(XorStr("Glow IT"), &item_glow);
-	//ImGui::SameLine(0, 5.0f);
-	ImGui::Checkbox(XorStr("Glow PL"), &player_glow);
 	ImGui::Checkbox(XorStr("ESP"), &esp);
+	ImGui::SameLine();
+	ImGui::Checkbox(XorStr("1V1"), &onevone);
 	//ImGui::SameLine();
 	//ImGui::TextColored(GREEN, "%.0f", esp_distance / 39.62); //meters
 	ImGui::Text(XorStr("SMT"));
 	ImGui::SameLine();
-	ImGui::SliderFloat(XorStr("##2"), &smooth, 12.0f, 150.0f, "%.2f");
+	ImGui::SliderFloat(XorStr("##2"), &smooth, 12.0f, 250.0f, "%.2f");
 	ImGui::Text(XorStr("FOV"));
 	ImGui::SameLine();
-	ImGui::SliderFloat(XorStr("##3"), &max_fov, 2.0f, 250.0f, "%.2f");
-	ImGui::Checkbox(XorStr("1V1"), &onevone);
+	ImGui::SliderFloat(XorStr("##3"), &max_fov, 3.80f, 250.0f, "%.2f");
 	ImGui::End();
 }
 
@@ -527,7 +531,7 @@ DWORD Overlay::CreateOverlay()
 		{
 			ImGui::Begin("##circlefov", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar);
 			auto draw = ImGui::GetBackgroundDrawList();
-			draw->AddCircle(ImVec2(2560 / 2, 1440         / 2), cfsize, IM_COL32(255, 0, 0, 255), 100, 2.0f);
+			draw->AddCircle(ImVec2(1920 / 2, 1080         / 2), cfsize, IM_COL32(255, 0, 0, 255), 100, 1.0f);
 			ImGui::End();
 		}
 		RenderEsp();
@@ -641,10 +645,10 @@ void Overlay::DrawLine(ImVec2 a, ImVec2 b, ImColor color, float width)
 
 void Overlay::DrawBox(ImColor color, float x, float y, float w, float h)
 {
-	DrawLine(ImVec2(x, y), ImVec2(x + w, y), color, 2.0f);
-	DrawLine(ImVec2(x, y), ImVec2(x, y + h), color, 2.0f);
-	DrawLine(ImVec2(x + w, y), ImVec2(x + w, y + h), color, 2.0f);
-	DrawLine(ImVec2(x, y + h), ImVec2(x + w, y + h), color, 2.0f);
+	DrawLine(ImVec2(x, y), ImVec2(x + w, y), color, 1.0f);
+	DrawLine(ImVec2(x, y), ImVec2(x, y + h), color, 1.0f);
+	DrawLine(ImVec2(x + w, y), ImVec2(x + w, y + h), color, 1.0f);
+	DrawLine(ImVec2(x, y + h), ImVec2(x + w, y + h), color, 1.0f);
 }
 
 void Overlay::Text(ImVec2 pos, ImColor color, const char* text_begin, const char* text_end, float wrap_width, const ImVec4* cpu_fine_clip_rect)

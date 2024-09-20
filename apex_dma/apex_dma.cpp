@@ -336,11 +336,21 @@ void DoActions()
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(30));	
 
-			uint64_t LocalPlayer = 0;
-			apex_mem.Read<uint64_t>(g_Base + OFFSET_LOCAL_ENT, LocalPlayer);
-			if (LocalPlayer == 0) continue;
+uint16_t LocalPlayer_idx = 0;
+apex_mem.Read<uint16_t>(g_Base + OFFSET_LOCAL_ENTITY_HANDLE, LocalPlayer_idx);
 
-			Entity LPlayer = getEntity(LocalPlayer);
+// Ensure the LocalPlayer index is valid
+if (LocalPlayer_idx == 0xFFFF) continue;
+
+// Use the local player index to find the local player's entity in the entity list
+uintptr_t LocalPlayer = 0;
+apex_mem.Read<uintptr_t>(g_Base + OFFSET_ENTITYLIST + (LocalPlayer_idx << 5), LocalPlayer);
+
+// Ensure the local player entity is valid
+if (LocalPlayer == 0) continue;
+
+// Retrieve the local player entity object
+Entity LPlayer = getEntity(LocalPlayer);
 
 			team_player = LPlayer.getTeamId();
 			if (team_player < 0 || team_player>50 && !onevone)
@@ -597,10 +607,10 @@ if (isGrappling && grappleAttached == 1) {
 					}
 
 					// Print spectator list
-					if (strlen(spectator_list[i].name) > 0) {
-    					printf("Spectator name: %s\n", spectator_list[i].name);
+					//if (strlen(spectator_list[i].name) > 0) {
+    					//printf("Spectator name: %s\n", spectator_list[i].name);
 					//std::cout << "Corresponding level: " << player_level << std::endl;
-					}
+					//}
 //////////////////
 
 					ProcessPlayer(LPlayer, Target, entitylist, i);
@@ -653,18 +663,37 @@ static void EspLoop()
 			{
 				valid = false;
 
-				uint64_t LocalPlayer = 0;
-				apex_mem.Read<uint64_t>(g_Base + OFFSET_LOCAL_ENT, LocalPlayer);
-				if (LocalPlayer == 0)
-				{
-					next = true;
-					while(next && g_Base!=0 && c_Base!=0 && esp)
-					{
-						std::this_thread::sleep_for(std::chrono::milliseconds(1));
-					}
-					continue;
-				}
-				Entity LPlayer = getEntity(LocalPlayer);
+uint16_t LocalPlayer_idx = 0;
+apex_mem.Read<uint16_t>(g_Base + OFFSET_LOCAL_ENTITY_HANDLE, LocalPlayer_idx);
+
+// Ensure the local player index is valid
+if (LocalPlayer_idx == 0xFFFF)
+{
+    next = true;
+    while(next && g_Base != 0 && c_Base != 0 && esp)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    continue;
+}
+
+// Use the local player index to find the local player's entity in the entity list
+uintptr_t LocalPlayer = 0;
+apex_mem.Read<uintptr_t>(g_Base + OFFSET_ENTITYLIST + (LocalPlayer_idx << 5), LocalPlayer);
+
+// Ensure the local player entity is valid
+if (LocalPlayer == 0)
+{
+    next = true;
+    while(next && g_Base != 0 && c_Base != 0 && esp)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    continue;
+}
+
+// Retrieve the local player entity object
+Entity LPlayer = getEntity(LocalPlayer);
 				int team_player = LPlayer.getTeamId();
 				if (team_player < 0 || team_player>50)
 				{
@@ -741,12 +770,12 @@ static void EspLoop()
 						}
 						
 						Vector bs = Vector();
-						WorldToScreen(EntityPosition, m.matrix, 2560, 1440, bs);
+						WorldToScreen(EntityPosition, m.matrix, 1920, 1080, bs);
 						if (bs.x > 0 && bs.y > 0)
 						{
 							Vector hs = Vector();
 							Vector HeadPosition = Target.getBonePositionByHitbox(0);
-							WorldToScreen(HeadPosition, m.matrix, 2560, 1440, hs);
+							WorldToScreen(HeadPosition, m.matrix, 1920, 1080, hs);
 							float height = abs(abs(hs.y) - abs(bs.y));
 							float width = height / 2.0f;
 							float boxMiddle = bs.x - (width / 2.0f);
@@ -830,12 +859,12 @@ static void EspLoop()
 						}
 
 						Vector bs = Vector();
-						WorldToScreen(EntityPosition, m.matrix, 2560, 1440, bs);
+						WorldToScreen(EntityPosition, m.matrix, 1920, 1080, bs);
 						if (bs.x > 0 && bs.y > 0)
 						{
 							Vector hs = Vector();
 							Vector HeadPosition = Target.getBonePositionByHitbox(0);
-							WorldToScreen(HeadPosition, m.matrix, 2560, 1440, hs);
+							WorldToScreen(HeadPosition, m.matrix, 1920, 1080, hs);
 							float height = abs(abs(hs.y) - abs(bs.y));
 							float width = height / 2.0f;
 							float boxMiddle = bs.x - (width / 2.0f);
@@ -898,10 +927,21 @@ static void AimbotLoop()
 				}
 				lock=true;
 				lastaimentity = aimentity;
-				uint64_t LocalPlayer = 0;
-				apex_mem.Read<uint64_t>(g_Base + OFFSET_LOCAL_ENT, LocalPlayer);
-				if (LocalPlayer == 0) continue;
-				Entity LPlayer = getEntity(LocalPlayer);
+uint16_t LocalPlayer_idx = 0;
+apex_mem.Read<uint16_t>(g_Base + OFFSET_LOCAL_ENTITY_HANDLE, LocalPlayer_idx);
+
+// Ensure the LocalPlayer index is valid
+if (LocalPlayer_idx == 0xFFFF) continue;
+
+// Use the local player index to find the local player's entity in the entity list
+uintptr_t LocalPlayer = 0;
+apex_mem.Read<uintptr_t>(g_Base + OFFSET_ENTITYLIST + (LocalPlayer_idx << 5), LocalPlayer);
+
+// Ensure the local player entity is valid
+if (LocalPlayer == 0) continue;
+
+// Retrieve the local player entity object
+Entity LPlayer = getEntity(LocalPlayer);
 				QAngle Angles = CalculateBestBoneAim(LPlayer, aimentity, max_fov);
 				if (Angles.x == 0 && Angles.y == 0)
 				{
@@ -1198,7 +1238,7 @@ int main(int argc, char *argv[])
 	//const char* ap_proc = "EasyAntiCheat_launcher.exe";
 
 	//Client "add" offset
-	uint64_t add_off = 0x1fe960; //0x1fe9b0 ; //0x1fe9b0; //0x1fb930; //0x1fc930; //0x1fb930; //0x1fc930; //0x1fb930; //0x203950; //0x1fb950; //0x1ec610;
+	uint64_t add_off = 0x1fb950; //YOU HAVE TO CHANGE THE OFFSET FROM THE WINDOWS CLIENT TO MATCH
 
 	std::thread aimbot_thr;
 	std::thread esp_thr;

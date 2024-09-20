@@ -8,7 +8,7 @@
 #include <fstream>
 #include <iostream>
 //test contraste texte
-#include "C:\Users\kaos\Documents\me\OKVM\apex_guest\Client\Client\imgui\imgui.h"
+#include "C:\Users\bacus\Documents\me\OKVM\apex_guest\Client\Client\imgui\imgui.h"
 
 typedef struct player
 {
@@ -54,15 +54,15 @@ bool aiming = false; //read
 uint64_t g_Base = 0; //write
 float max_dist = 110.0f * 40.0f;
 //float esp_distance = 300.0f * 40.0f;
-float smooth = 100.00f;
-float max_fov = 5.00f;
+float smooth = 130.00f;
+float max_fov = 3.80f;
 int bone = 2;
 //int SuperKey = VK_LSHIFT;
 //static bool startSg = false;
 
 //float esp_distance = 300.0f; // Units in meters
 
-float DDS = max_dist; //80.0f * 40.0f; //need test 25 before for closets targets but seem to be wrong
+float DDS = 80.0f * 40.0f; //need test 25 before for closets targets but seem to be wrong
 //float EBD = 300.0f * 40.0f; //distance for seer esp and box esp
 
 bool firing_range = false;
@@ -254,24 +254,6 @@ void Overlay::RenderEsp()
 			ImGui::SetNextWindowSize(ImVec2((float)getWidth(), (float)getHeight()));
 			ImGui::Begin(XorStr("##esp"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
-			// Constants for minimum and maximum values
-			const float MIN_MAX_FOV = 5.00f;
-			const float MAX_MAX_FOV = 65.00f;
-			const float MIN_SMOOTH = 70.00f;
-			const float MAX_SMOOTH = 100.00f;
-			float max_fov = 5.00f;
-			float smooth = 100.00f;
-			const float SMOOTHING_FACTOR = 0.1f;
-
-			auto interpolate = [](float min, float max, float factor) {
-				return min + factor * (max - min);
-				};
-
-			auto lerp = [](float a, float b, float t) {
-				return a + t * (b - a);
-				};
-
-
 			for (int i = 0; i < 100; i++)
 			{
 				if (players[i].health > 0)
@@ -298,23 +280,39 @@ void Overlay::RenderEsp()
 					// Define the maximum distance you want to consider (previously referred to as max_distance)
 					//float max_dist = 80.0f * 40.0f; // Adjust this value as per your requirement
 
-					float distanceFactor = (max_dist > 0) ? 1.0f - (players[i].dist / max_dist) : 0.0f;
-					distanceFactor = (distanceFactor < 0.0f) ? 0.0f : (distanceFactor > 1.0f) ? 1.0f : distanceFactor;
+					// Calculate a scaling factor based on the player's distance
+					float distanceFactor = 1.0f - (players[i].dist / max_dist);
 
-					bool isCloseRange = (players[i].dist < DDS);
+					// Define the minimum and maximum values for max_fov, cfsize, and smooth
+					const float min_max_fov = 3.80f;
+					const float max_max_fov = 12.00f;
+					const float min_cfsize = min_max_fov;
+					const float max_cfsize = max_max_fov;
+					const float min_smooth = 90.00f;
+					const float max_smooth = 130.00f;
 
-					float newMaxFov = isCloseRange ? interpolate(MIN_MAX_FOV, MAX_MAX_FOV, distanceFactor) : max_fov;
-					float newCfsize = isCloseRange ? newMaxFov : max_fov;
-					float newSmooth = isCloseRange ? interpolate(MIN_SMOOTH, MAX_SMOOTH, distanceFactor) : smooth;
+					// Smoothly interpolate the adjusted values based on the distance factor
+					float adjusted_max_fov = min_max_fov + distanceFactor * (max_max_fov - min_max_fov);
+					float adjusted_cfsize = min_cfsize + distanceFactor * (max_cfsize - min_cfsize);
+					float adjusted_smooth = min_smooth + distanceFactor * (max_smooth - min_smooth);
 
-					// Apply smoothing
-					max_fov = lerp(max_fov, newMaxFov, SMOOTHING_FACTOR);
-					cfsize = lerp(cfsize, newCfsize, SMOOTHING_FACTOR);
-					smooth = lerp(smooth, newSmooth, SMOOTHING_FACTOR);
-
-					aim_key = true;
-					aim_key2 = isCloseRange;
-
+					// Check the distance condition and update the values accordingly
+					if (players[i].dist < DDS) // DDS at top as before
+					{
+						max_fov = adjusted_max_fov;
+						cfsize = adjusted_cfsize;
+						aim_key = true; // You can set this based on your needs
+						aim_key2 = true;
+						smooth = adjusted_smooth;
+					}
+					else
+					{
+						max_fov = 3.80f; //adjusted_max_fov;
+						cfsize = max_fov;
+						aim_key = true; // You can set this based on your needs
+						aim_key2 = false;
+						smooth = 130.00f; //adjusted_smooth;
+					}
 
 					//if(v.line)
 					//	DrawLine(ImVec2((float)(getWidth() / 2), (float)getHeight()), ImVec2(players[i].b_x, players[i].b_y), BLUE, 1); //LINE FROM MIDDLE SCREEN
@@ -325,50 +323,35 @@ void Overlay::RenderEsp()
 						distance = distance.substr(0, distance.find('.')) + "m (" + std::to_string(players[i].entity_team) + ")";
 						distance += " |" + std::to_string(players[i].xp_level) + "|";
 
+						// Display the distance just below the name
 						if (players[i].knocked)
-							String(ImVec2(players[i].boxMiddle, (players[i].b_y + 1)), RED, distance.c_str());  //DISTANCE
+							String(ImVec2(players[i].boxMiddle, (players[i].b_y + 25)), RED, distance.c_str());  // DISTANCE
 						else
-							String(ImVec2(players[i].boxMiddle, (players[i].b_y + 1)), GREEN, distance.c_str());  //DISTANCE
+							String(ImVec2(players[i].boxMiddle, (players[i].b_y + 25)), GREEN, distance.c_str());  // DISTANCE
 					}
 
-
-					//old style
-					//if(v.healthbar)
-					//	ProgressBar((players[i].b_x - (players[i].width / 2.0f) - 4), (players[i].b_y - players[i].height), 4, players[i].height, players[i].health, 100); //health bar
-					//if (v.shieldbar)
-					//	ProgressBar((players[i].b_x + (players[i].width / 2.0f) + 1), (players[i].b_y - players[i].height), 4, players[i].height, players[i].shield, 125); //shield bar
-					//SEER STYLE
+					// SEER STYLE health bar logic
 					if (v.healthbar)
+					{
 						if (players[i].dist < 9000.0f)
 						{
 							// Divide the values by 2 to reduce the size of the health bar
-							float barX = players[i].b_x - (players[i].width / 4.0f) + 5; // Halve the width
-							float barY = players[i].b_y - (players[i].height / 2.0f) - 10; // Halve the height
+							float barX = players[i].b_x - (players[i].width / 4.0f) + 5;  // Halve the width
+							float barY = players[i].b_y - (players[i].height / 2.0f) - 10;  // Halve the height
 
-							DrawSeerLikeHealth(barX, barY, players[i].shield, players[i].maxshield, players[i].armortype, players[i].health); // health bar
+							DrawSeerLikeHealth(barX, barY, players[i].shield, players[i].maxshield, players[i].armortype, players[i].health);  // Health bar
 						}
-					
-					// Log the player_level value for each player
-					//logFile << "Player " << i << " level: " << players[i].player_level << std::endl;
+					}
 
+					// Display the name just above the distance
+					if (v.name)
+					{
+						if (players[i].knocked)
+							String(ImVec2(players[i].boxMiddle, (players[i].b_y + 15)), RED, players[i].name);  // NAME in RED if knocked
+						else
+							String(ImVec2(players[i].boxMiddle, (players[i].b_y + 15)), GREEN, players[i].name);  // NAME in GREEN if not knocked
+					}
 
-					if(v.name)
-						{
-						// Fetch the XP level for the player
-						//std::string combinedString = std::string(players[i].name) + " [Level: " + std::to_string(players[i].player_level) + "]";
-						//String(ImVec2(players[i].boxMiddle, (players[i].b_y - players[i].height - 15)), WHITE, combinedString.c_str());
-						String(ImVec2(players[i].boxMiddle, (players[i].b_y - players[i].height - 15)), WHITE, players[i].name);
-						//std::string levelString = std::to_string(players[i].player_level);
-						//String(ImVec2(players[i].boxMiddle, (players[i].b_y + 1)), BLUE, levelString.c_str());  //Level
-
-					//if (v.name) {
-					//	ImVec4 backgroundColor = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
-					//	ImU32 textColor = GetContrastColor(GetImU32Color(backgroundColor));
-
-					//	ImVec2 textPosition(players[i].boxMiddle, (players[i].b_y - players[i].height - 15));
-					//	String(textPosition, textColor, players[i].name);
-
-						}				
 				}
 			}
 
@@ -525,18 +508,21 @@ int main(int argc, char** argv)
 			}
 		}
 
+		memset(spectator_list, 0, sizeof(spectator_list));
+
 		if (IsKeyDown(VK_F1) && k_f1 == 0)
 		{
 			k_f1 = 1;
 			esp = !esp;
-			aim = 2;
+			// aim = 2;
 			player_glow = !player_glow;
+			k_f6 = 1;
 			//item_glow = !item_glow;
 		}
 		else if (!IsKeyDown(VK_F1) && k_f1 == 1)
 		{
 			k_f1 = 0;
-			memset(spectator_list, 0, sizeof(spectator_list));
+			k_f6 = 0;
 		}
 
 		if (IsKeyDown(VK_F5) && k_f5 == 0)

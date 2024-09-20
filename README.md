@@ -46,7 +46,7 @@ FEATURES :
  - You need to manually change the path on the client side at apex_guest/Client/Client/main.cpp - Change USERS to yours.
  -> #include "C:\Users\USERS\Documents\me\OKVM\apex_guest\Client\Client\imgui\imgui.h"
 
-<img src="https://github.com/albatror/adkv/blob/master/demo/settingsS.png?raw=true" style="display: block; margin: auto;" />
+<img src="https://github.com/albatror/adkv/blob/master/demo/settingsS.png" style="display: block; margin: auto;" />
 <img src="https://github.com/albatror/adkv/blob/master/demo/Demo2.png" style="display: block; margin: auto;" />
 <img src="https://github.com/albatror/adkv/blob/master/demo/settingsN2.png" style="display: block; margin: auto;" />
 <img src="https://github.com/albatror/adkv/blob/master/demo/Demo4.png" style="display: block; margin: auto;" />

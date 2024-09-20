@@ -167,11 +167,6 @@ int tmp_all_spec = 0, allied_spectators = 0;
 int settingIndex;
 int contextId;
 std::array<float, 3> highlightParameter;
-///////////
-
-//TEST//
-//ENDTEST//
-/////////////
 
 //////////////////////////////////////////
 //works

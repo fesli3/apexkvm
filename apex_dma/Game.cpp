@@ -38,9 +38,12 @@ bool Entity::Observing(uint64_t localptr)
 	uint64_t SpectatorAddr;
 	apex_mem.Read<uint64_t>(apex_mem.get_proc_baseaddr() + OFFSET_ENTITYLIST + ((SpecIndex & 0xFFFF) << 5), SpectatorAddr);
 
-	if (SpectatorAddr == localptr)
-		return true;
-	return false;
+    	if (SpectatorAddr == localptr) 
+	{
+        return true;
+    }
+ 
+    return false;
 }
 
 //https://github.com/CasualX/apexbot/blob/master/src/state.cpp#L104
@@ -316,7 +319,7 @@ bool Entity::isZooming()
   		//apex_mem.Write<float>(ptr + 0x264, 8.0E+4);
 
  		//apex_mem.Write(g_Base + OFFSET_GLOW_FIX, 1);
-    		apex_mem.Write<float>(ptr + GLOW_DISTANCE, 9999999999);
+    		apex_mem.Write<float>(ptr + GLOW_DISTANCE, 88888);
      
     	
      

@@ -35,6 +35,13 @@ bool aim_no_recoil = true;
 bool aiming = false;
 
 extern float smooth;
+//added stuff
+//extern float min_max_fov;
+//extern float max_max_fov;
+//extern float min_smooth;
+//extern float max_smooth;
+//en stuff
+
 extern int bone;
 bool shooting = false;
 
@@ -92,7 +99,7 @@ bool updateInsideValue_t = false;
 ///////////////////////////
 //Player Glow Color and Brightness.
 //inside fill
-unsigned char insidevalue = 7;  //0 = no fill, 14 = full fill
+unsigned char insidevalue = 4;  //0 = no fill, 14 = full fill
 //Outline size
 unsigned char outlinesize = 32; // 0-255
 //Not Visable 
@@ -167,6 +174,7 @@ int tmp_all_spec = 0, allied_spectators = 0;
 int settingIndex;
 int contextId;
 std::array<float, 3> highlightParameter;
+///////////
 
 //////////////////////////////////////////
 //works
@@ -1137,6 +1145,31 @@ if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*28, spec_list_addr)) {
   printf("Read failed!\n");
 }
 
+//
+//uint64_t min_max_fov_addr = 0;
+//printf("Reading min_max_fov address: %lx\n", add_addr + sizeof(uint64_t)*29);
+//if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*29, min_max_fov_addr)) {
+//  printf("Read failed!\n");
+//}
+//
+//uint64_t max_max_fov_addr = 0;
+//printf("Reading max_max_fov address: %lx\n", add_addr + sizeof(uint64_t)*30);
+//if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*30, max_max_fov_addr)) {
+//  printf("Read failed!\n");
+//}
+//
+//uint64_t min_smooth_addr = 0;
+//printf("Reading min_smooth address: %lx\n", add_addr + sizeof(uint64_t)*31);
+//if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*31, min_smooth_addr)) {
+//  printf("Read failed!\n");
+//}
+//
+//uint64_t max_smooth_addr = 0;
+//printf("Reading max_smooth address: %lx\n", add_addr + sizeof(uint64_t)*32);
+//if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*32, max_smooth_addr)) {
+//  printf("Read failed!\n");
+//}
+
 ////////
 
 	uint32_t check = 0;
@@ -1195,6 +1228,12 @@ if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*28, spec_list_addr)) {
 			client_mem.Read<bool>(onevone_addr, onevone);
 			client_mem.WriteArray<spectator>(spec_list_addr, spectator_list , toRead);
 			//printf("SuperKey after: %d", SuperKey);
+			//stuff DDS
+			//client_mem.Read<float>(min_max_fov_addr, min_max_fov);
+			//client_mem.Read<float>(max_max_fov_addr, max_max_fov);
+			//client_mem.Read<float>(min_smooth_addr, min_smooth);
+			//client_mem.Read<float>(max_smooth_addr, max_smooth);
+			//
 
 			if(esp && next)
 			{
@@ -1233,7 +1272,7 @@ int main(int argc, char *argv[])
 	//const char* ap_proc = "EasyAntiCheat_launcher.exe";
 
 	//Client "add" offset
-	uint64_t add_off = 0x1fb950; //YOU HAVE TO CHANGE THE OFFSET FROM THE WINDOWS CLIENT TO MATCH
+	uint64_t add_off = 0x1ff9b0; //0x1fe9b0 ; //0x1fe9b0; //0x1fb930; //0x1fc930; //0x1fb930; //0x1fc930; //0x1fb930; //0x203950; //0x1fb950; //0x1ec610;
 
 	std::thread aimbot_thr;
 	std::thread esp_thr;

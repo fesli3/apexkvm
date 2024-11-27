@@ -45,8 +45,9 @@ extern float smooth;
 extern int bone;
 bool shooting = false;
 
-bool SuperKey = false;
-bool SuperKeyToggle = true;
+//const int SuperKey = VK_SPACE;
+int SuperKey = false;
+//bool SuperKeyToggle = true;
 
 //int itementcount = 10000;
 
@@ -131,6 +132,15 @@ uint64_t c_Base;
 bool next = false;
 bool valid = false;
 bool lock = false;
+
+//map
+int map = 0;
+
+// Déclarations au niveau global (ou dans votre classe si besoin)
+
+int tapstrafe = 0;  // Initialisé à 0, commence le comptage
+
+bool forward_hold = false;  // Initialisé à faux, pas de clé maintenue au début
 
 typedef struct player
 {
@@ -337,6 +347,39 @@ void DoActions()
 
 		while (g_Base!=0 && c_Base!=0)
 		{
+///////////////
+			char MapName[200] = { 0 };
+			uint64_t MapName_ptr = 0;
+			apex_mem.Read<uint64_t>(g_Base + OFFSET_HOST_MAP, MapName_ptr);
+			apex_mem.ReadArray<char>(MapName_ptr, MapName, 200);
+					
+			//printf("%s\n", MapName);
+			if (strcmp(MapName, "mp_rr_tropic_island_mu1_storm") == 0) 
+			{
+				map = 1;
+			} 
+			else if (strcmp(MapName, "mp_rr_canyonlands_mu") == 0) 
+			{
+				map = 2;
+			}
+			else if (strcmp(MapName, "mp_rr_desertlands_hu") == 0) 
+			{
+				map = 3;
+			}
+			else if (strcmp(MapName, "mp_rr_olympus") == 0) 
+			{
+				map = 4;
+			} 
+			else  if (strcmp(MapName, "mp_rr_divided_moon") == 0)
+			{
+				map = 5;
+			}
+			else
+			{
+				map = 0;
+			}
+			
+///////////////
 			std::this_thread::sleep_for(std::chrono::milliseconds(30));	
 
 uint16_t LocalPlayer_idx = 0;
@@ -523,10 +566,10 @@ if (isGrappling && grappleAttached == 1) {
 
 //bhop///
 //if (bhop_enable) {
-//  apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 5);
-//  std::this_thread::sleep_for(std::chrono::milliseconds(1)); 
-//  apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 4);
-////  std::this_thread::sleep_for(std::chrono::milliseconds(1));
+//apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 5);
+//std::this_thread::sleep_for(std::chrono::milliseconds(1)); 
+//apex_mem.Write<int>(g_Base + OFFSET_IN_JUMP + 0x8, 4);
+//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 //}
 //bhop END/////////////////////////////
 
@@ -773,12 +816,12 @@ Entity LPlayer = getEntity(LocalPlayer);
 						}
 						
 						Vector bs = Vector();
-						WorldToScreen(EntityPosition, m.matrix, 1920, 1080, bs);
+						WorldToScreen(EntityPosition, m.matrix, 2560, 1440, bs);
 						if (bs.x > 0 && bs.y > 0)
 						{
 							Vector hs = Vector();
 							Vector HeadPosition = Target.getBonePositionByHitbox(0);
-							WorldToScreen(HeadPosition, m.matrix, 1920, 1080, hs);
+							WorldToScreen(HeadPosition, m.matrix, 2560, 1440, hs);
 							float height = abs(abs(hs.y) - abs(bs.y));
 							float width = height / 2.0f;
 							float boxMiddle = bs.x - (width / 2.0f);
@@ -862,12 +905,12 @@ Entity LPlayer = getEntity(LocalPlayer);
 						}
 
 						Vector bs = Vector();
-						WorldToScreen(EntityPosition, m.matrix, 1920, 1080, bs);
+						WorldToScreen(EntityPosition, m.matrix, 2560, 1440, bs);
 						if (bs.x > 0 && bs.y > 0)
 						{
 							Vector hs = Vector();
 							Vector HeadPosition = Target.getBonePositionByHitbox(0);
-							WorldToScreen(HeadPosition, m.matrix, 1920, 1080, hs);
+							WorldToScreen(HeadPosition, m.matrix, 2560, 1440, hs);
 							float height = abs(abs(hs.y) - abs(bs.y));
 							float width = height / 2.0f;
 							float boxMiddle = bs.x - (width / 2.0f);
@@ -891,7 +934,7 @@ Entity LPlayer = getEntity(LocalPlayer);
 								shield,
 								maxshield,
 								armortype,
-								Target.read_xp_level()
+								//Target.read_xp_level()
 							};
 							Target.get_name(g_Base, i-1, &players[i].name[0]);
 							lastvis_esp[i] = Target.lastVisTime();
@@ -1172,18 +1215,19 @@ if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*28, spec_list_addr)) {
 
 ////////
 
-	uint32_t check = 0;
-	client_mem.Read<uint32_t>(check_addr, check);
-	
-	if(check != 0xABCD)
-	{
-		printf("Incorrect values read. Check if the add_off is correct. Quitting.\n");
-		active = false;
-		return;
-	}
-	vars_t = true;
-	while(vars_t)
-	{
+uint32_t check = 0;
+client_mem.Read<uint32_t>(check_addr, check);
+
+if (check != 0xABCD)
+{
+    printf("Incorrect values read. Check if the add_off is correct. Quitting.\n");
+    active = false;
+    return;
+}
+vars_t = true;
+
+while (vars_t)
+{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		if(c_Base!=0 && g_Base!=0)
 		{
@@ -1191,69 +1235,55 @@ if(!client_mem.Read<uint64_t>(add_addr + sizeof(uint64_t)*28, spec_list_addr)) {
 			printf("\nReady\n");
 		}
 
-		while(c_Base!=0 && g_Base!=0)
-		{
+    while (c_Base != 0 && g_Base != 0)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        client_mem.Write<uint64_t>(g_Base_addr, g_Base);
+        client_mem.Write<int>(spectators_addr, spectators);
+        client_mem.Write<int>(allied_spectators_addr, allied_spectators);
 
-  			//printf("SuperKey before: %d", SuperKey);
+        client_mem.Read<int>(aim_addr, aim);
+        client_mem.Read<bool>(esp_addr, esp);
+        client_mem.Read<bool>(aiming_addr, aiming);
+        client_mem.Read<float>(max_dist_addr, max_dist);
+        client_mem.Read<bool>(player_glow_addr, player_glow);
+        client_mem.Read<bool>(aim_no_recoil_addr, aim_no_recoil);
+        client_mem.Read<float>(smooth_addr, smooth);
+        client_mem.Read<float>(max_fov_addr, max_fov);
+        client_mem.Read<int>(bone_addr, bone);
+        client_mem.Read<float>(glowr_addr, glowr);
+        client_mem.Read<float>(glowg_addr, glowg);
+        client_mem.Read<float>(glowb_addr, glowb);
+        client_mem.Read<float>(glowrviz_addr, glowrviz);
+        client_mem.Read<float>(glowgviz_addr, glowgviz);
+        client_mem.Read<float>(glowbviz_addr, glowbviz);
+        client_mem.Read<float>(glowrknocked_addr, glowrknocked);
+        client_mem.Read<float>(glowgknocked_addr, glowgknocked);
+        client_mem.Read<float>(glowbknocked_addr, glowbknocked);
+        client_mem.Read<bool>(firing_range_addr, firing_range);
+        client_mem.Read<bool>(shooting_addr, shooting);
+        client_mem.Read<bool>(onevone_addr, onevone);
+        client_mem.WriteArray<spectator>(spec_list_addr, spectator_list, toRead);
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-			client_mem.Write<uint64_t>(g_Base_addr, g_Base);
-			client_mem.Write<int>(spectators_addr, spectators);
-			client_mem.Write<int>(allied_spectators_addr, allied_spectators);
+        if (esp && next)
+        {
+            if (valid)
+                client_mem.WriteArray<player>(player_addr, players, toRead);
+            client_mem.Write<bool>(valid_addr, valid);
+            client_mem.Write<bool>(next_addr, true); //next
 
-			client_mem.Read<int>(aim_addr, aim);
-			client_mem.Read<bool>(esp_addr, esp);
-			client_mem.Read<bool>(aiming_addr, aiming);
-			client_mem.Read<float>(max_dist_addr, max_dist);
-			//client_mem.Read<bool>(item_glow_addr, item_glow);
-			client_mem.Read<bool>(player_glow_addr, player_glow);
-			client_mem.Read<bool>(aim_no_recoil_addr, aim_no_recoil);
-			client_mem.Read<float>(smooth_addr, smooth);
-			client_mem.Read<float>(max_fov_addr, max_fov);
-			client_mem.Read<int>(bone_addr, bone);
-			//glow notvisable
-			client_mem.Read<float>(glowr_addr, glowr);
-			client_mem.Read<float>(glowg_addr, glowg);
-			client_mem.Read<float>(glowb_addr, glowb);
-			//glow visable
-			client_mem.Read<float>(glowrviz_addr, glowrviz);
-			client_mem.Read<float>(glowgviz_addr, glowgviz);
-			client_mem.Read<float>(glowbviz_addr, glowbviz);
-			//knocked
-			client_mem.Read<float>(glowrknocked_addr, glowrknocked);
-			client_mem.Read<float>(glowgknocked_addr, glowgknocked);
-			client_mem.Read<float>(glowbknocked_addr, glowbknocked);
-			client_mem.Read<bool>(firing_range_addr, firing_range);
-			client_mem.Read<bool>(shooting_addr, shooting);
-			client_mem.Read<bool>(onevone_addr, onevone);
-			client_mem.WriteArray<spectator>(spec_list_addr, spectator_list , toRead);
-			//printf("SuperKey after: %d", SuperKey);
-			//stuff DDS
-			//client_mem.Read<float>(min_max_fov_addr, min_max_fov);
-			//client_mem.Read<float>(max_max_fov_addr, max_max_fov);
-			//client_mem.Read<float>(min_smooth_addr, min_smooth);
-			//client_mem.Read<float>(max_smooth_addr, max_smooth);
-			//
+            bool next_val = false;
+            do
+            {
+                client_mem.Read<bool>(next_addr, next_val);
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            } while (next_val && g_Base != 0 && c_Base != 0);
 
-			if(esp && next)
-			{
-				if(valid)
-					client_mem.WriteArray<player>(player_addr, players, toRead);
-				client_mem.Write<bool>(valid_addr, valid);
-				client_mem.Write<bool>(next_addr, true); //next
-
-				bool next_val = false;
-				do
-				{
-					client_mem.Read<bool>(next_addr, next_val);
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
-				} while (next_val && g_Base!=0 && c_Base!=0);
-				
-				next = false;
-			}
-		}
-	}
-	vars_t = false;
+            next = false;
+        }
+    }
+}
+vars_t = false;
 }
 
 // Item Glow Stuff
@@ -1272,8 +1302,7 @@ int main(int argc, char *argv[])
 	//const char* ap_proc = "EasyAntiCheat_launcher.exe";
 
 	//Client "add" offset
-	uint64_t add_off = 0x1fc930; //0x1db720 ;
-
+	uint64_t add_off = 0x1ff9b0; //0x1fe9b0;
 	std::thread aimbot_thr;
 	std::thread esp_thr;
 	std::thread actions_thr;

@@ -5,7 +5,7 @@ UnknownCheats thread: https://www.unknowncheats.me/forum/apex-legends/406426-kvm
 
 Bone IDs reference: https://www.unknowncheats.me/wiki/Apex_Legends_Bones_and_Hitboxes
 
-Game version (Steam): v3.0.80.27
+Game version (Steam): v3.0.4.31
 
 Added build_libmemflow.zip when you get stuck at :
     Init with qemu connector...
@@ -18,7 +18,8 @@ Added build_libmemflow.zip when you get stuck at :
            + libmemflow_qemu.so
            + libmemflow_win32.so
 
-Windows 1903
+and added script install_memflow.sh too install memflow-kvm & memflow-qemu at https://github.com/albatror/memflow (DONT FORGET TO UPDATE WITH YOUR PATH)
+Working on Windows 10 20H1 (only)
 1920/1080 (default)
 2560/1440 (need to be changed manually)
 
@@ -31,9 +32,9 @@ VISUALS :
  - Spectators count + Name List
 
 FEATURES :
- - New function to read localPlayer with OFFSET_LOCAL_ENTITY_HANDLE //[Miscellaneous].LocalEntityHandle (seem more easy for updates)
+ - New function to read localPlayer with OFFSET_LOCAL_ENTITY_HANDLE //[Miscellaneous].LocalEntityHandle (seem more easy for new updates)
  - Press F1 (To Activate GloW, ESP Seer Health/Shield and Aimbot based on default conf)
- - Dynamic FOV/AIM/SMOOTH [80m by default] Process Updated & Optimized - Settings added in overlay
+ - Dynamic FOV/AIM/SMOOTH [70m by default] Process Updated & Optimized - Settings added in overlay
  - AutoSuperGlide (nothing to do, it do for you :) )
  - AutoWallJump updated (Slide then jump on a wall, dont touch anything else and it'll auto-walljump)
  - 1V1 (F9)

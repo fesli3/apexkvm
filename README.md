@@ -10,10 +10,10 @@ Game version (Steam): v3.0.4.31
 Removed build_libmemflow.zip.
 
 Added script install_memflow.sh to install memflow-kvm & memflow-qemu at https://github.com/albatror/memflow if you still stuck at : 
-    Init with qemu connector...
-    Can't create qemu connector
-    Init with kvm connector...
-    Can't create kvm connector
+- Init with qemu connector...
+- Can't create qemu connector
+- Init with kvm connector...
+- Can't create kvm connector
     
 (DONT FORGET TO UPDATE WITH YOUR PATH IN THE SCRIPT AT # Export PATH & # Define variables)
 

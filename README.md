@@ -7,18 +7,15 @@ Bone IDs reference: https://www.unknowncheats.me/wiki/Apex_Legends_Bones_and_Hit
 
 Game version (Steam): v3.0.4.31
 
-Added build_libmemflow.zip when you get stuck at :
+Removed build_libmemflow.zip.
+
+Added script install_memflow.sh to install memflow-kvm & memflow-qemu at https://github.com/albatror/memflow if you still stuck at : 
     Init with qemu connector...
     Can't create qemu connector
     Init with kvm connector...
     Can't create kvm connector
-
-    - extract the 3 libmemflow files on the build folder (if build isn't there, you can create it by compiling aka sh build.sh or you can create manually a folder named "build").
-           + libmemflow_kvm.so
-           + libmemflow_qemu.so
-           + libmemflow_win32.so
-
-Added script install_memflow.sh to install memflow-kvm & memflow-qemu at https://github.com/albatror/memflow if you still stuck (DONT FORGET TO UPDATE WITH YOUR PATH IN THE SCRIPT AT # Export PATH to ensure all commands are found) & # Define variables)
+    
+(DONT FORGET TO UPDATE WITH YOUR PATH IN THE SCRIPT AT # Export PATH & # Define variables)
 
 Working on Windows 10 20H1 (only)
 1920/1080 (need to be changed manually)(default)

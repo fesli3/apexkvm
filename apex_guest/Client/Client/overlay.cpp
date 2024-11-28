@@ -52,10 +52,10 @@ extern float glowbknocked;
 extern float glowcolorknocked[3];
 
 //DDS
-extern float min_max_fov = 3.80f;
-extern float max_max_fov = 12.00f;
-extern float min_smooth = 90.00f;
-extern float max_smooth = 130.00f;
+extern float min_max_fov;
+extern float max_max_fov;
+extern float min_smooth;
+extern float max_smooth;
 
 int width;
 int height;
@@ -204,9 +204,17 @@ void Overlay::RenderMenu()
 			//TEST CONFIG DDS
 			//ImGui::Text(XorStr("EBD:"));
 			ImGui::SliderFloat(XorStr("##min_max_fov"), &min_max_fov, 3.80f, 250.0f, "%.2f");
+			ImGui::SameLine();
+			ImGui::Text("Min Fov");
 			ImGui::SliderFloat(XorStr("##max_max_fov"), &max_max_fov, 3.80f, 250.0f, "%.2f");
+			ImGui::SameLine();
+			ImGui::Text("Max Fov");
 			ImGui::SliderFloat(XorStr("##min_smooth"), &min_smooth, 12.0f, 250.0f, "%.2f");
+			ImGui::SameLine();
+			ImGui::Text("Min Smooth");
 			ImGui::SliderFloat(XorStr("##max_smooth"), &max_smooth, 12.0f, 250.0f, "%.2f");
+			ImGui::SameLine();
+			ImGui::Text("Max Smooth");
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem(XorStr("Visuals")))
@@ -296,6 +304,10 @@ void Overlay::RenderMenu()
 					config << glowcolorknocked[1] << "\n";
 					config << glowcolorknocked[2] << "\n";
 					//config << std::boolalpha << onevone;
+					config << min_max_fov << "\n";
+					config << max_max_fov << "\n";
+					config << min_smooth << "\n";
+					config << max_smooth << "\n";
 					config.close();
 				}
 			}
@@ -345,6 +357,10 @@ void Overlay::RenderMenu()
 					config >> glowcolorknocked[1];
 					config >> glowcolorknocked[2];
 					//config >> std::boolalpha >> onevone;
+					config >> min_max_fov;
+					config >> max_max_fov;
+					config >> min_smooth;
+					config >> max_smooth;
 					config.close();
 				}
 			}
@@ -359,20 +375,18 @@ void Overlay::RenderMenu()
 void Overlay::RenderInfo()
 {
 	ImGui::SetNextWindowPos(ImVec2(300, 0));
-	ImGui::SetNextWindowSize(ImVec2(190, 130));
+	ImGui::SetNextWindowSize(ImVec2(170, 100));
 	ImGui::Begin(XorStr("##info"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
-	DrawLine(ImVec2(1, 2), ImVec2(190, 2), RED, 2);;
-	//ImGui::TextColored(RED, "%d", spectators);
-	//ImGui::SameLine();
-	//ImGui::Text("-");
-	//ImGui::SameLine();
-	//ImGui::TextColored(GREEN, "%d", allied_spectators);
-	//ImGui::SameLine();
-	//ImGui::Text("|");
-	//ImGui::SameLine();
+	DrawLine(ImVec2(1, 2), ImVec2(170, 2), RED, 2);;
 	ImGui::Text(XorStr("DDS :"));
 	ImGui::SameLine();
 	ImGui::Text("%d meters", (int)(DDS / 40));
+	ImGui::SameLine();
+	ImGui::TextColored(RED, "%d", spectators);
+	ImGui::SameLine();
+	ImGui::Text("-");
+	ImGui::SameLine();
+	ImGui::TextColored(GREEN, "%d", allied_spectators);
 	ImGui::Checkbox(XorStr("Glow"), &player_glow);
 	ImGui::SameLine();
 	ImGui::Checkbox(XorStr("ESP"), &esp);
@@ -386,6 +400,23 @@ void Overlay::RenderInfo()
 	ImGui::Text(XorStr("FOV"));
 	ImGui::SameLine();
 	ImGui::SliderFloat(XorStr("##3"), &max_fov, 3.80f, 250.0f, "%.2f");
+
+	// Get the end position of the FOV slider
+	ImVec2 fovSliderEnd = ImGui::GetItemRectMax();
+	ImVec2 squarePos = ImVec2(fovSliderEnd.x + 5, fovSliderEnd.y - 10); // Adjust the position as needed
+	ImVec2 squareSize = ImVec2(10, 10);
+
+	bool isConnected = ready; // Use the 'ready' variable to determine connection status
+
+	if (isConnected)
+	{
+		ImGui::GetWindowDrawList()->AddRectFilled(squarePos, ImVec2(squarePos.x + squareSize.x, squarePos.y + squareSize.y), IM_COL32(0, 255, 0, 255)); // Green if ready
+	}
+	else
+	{
+		ImGui::GetWindowDrawList()->AddRectFilled(squarePos, ImVec2(squarePos.x + squareSize.x, squarePos.y + squareSize.y), IM_COL32(255, 0, 0, 255)); // Red if not ready
+	}
+
 	ImGui::End();
 }
 
@@ -525,13 +556,13 @@ DWORD Overlay::CreateOverlay()
 			RenderMenu();
 		else
 			RenderInfo();
-			RenderSpectator();
+			//RenderSpectator();
 
 		if (fov)
 		{
 			ImGui::Begin("##circlefov", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar);
 			auto draw = ImGui::GetBackgroundDrawList();
-			draw->AddCircle(ImVec2(1920 / 2, 1080         / 2), cfsize, IM_COL32(255, 0, 0, 255), 100, 1.0f);
+			draw->AddCircle(ImVec2(2560 / 2, 1440         / 2), cfsize, IM_COL32(255, 0, 0, 255), 100, 1.0f);
 			ImGui::End();
 		}
 		RenderEsp();

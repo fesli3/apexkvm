@@ -8,7 +8,7 @@
 #include <fstream>
 #include <iostream>
 //test contraste texte
-#include "C:\Users\bacus\Documents\me\OKVM\apex_guest\Client\Client\imgui\imgui.h"
+#include "C:\Users\Ekoo-W10\Documents\OKVM\apex_guest\Client\Client\imgui\imgui.h"
 
 typedef struct player
 {
@@ -45,25 +45,34 @@ bool use_nvidia = false;
 bool active = true;
 bool ready = false;
 extern visuals v;
-int aim = 2; //read
+int aim = 0; //read
 bool esp = false; //read
 //bool item_glow = false;
 bool player_glow = false;
 bool aim_no_recoil = true;
 bool aiming = false; //read
 uint64_t g_Base = 0; //write
-float max_dist = 110.0f * 40.0f;
+float max_dist = 120.0f * 40.0f;
 //float esp_distance = 300.0f * 40.0f;
-float smooth = 130.00f;
+float smooth = 140.00f;
 float max_fov = 3.80f;
 int bone = 2;
-//int SuperKey = VK_LSHIFT;
-//static bool startSg = false;
+// Declare constants for key detection
+int SuperKey = VK_SPACE;  // VK_SPACE is the spacebar keycode
+//int SuperKey = false;
 
 //float esp_distance = 300.0f; // Units in meters
 
-float DDS = 80.0f * 40.0f; //need test 25 before for closets targets but seem to be wrong
+float DDS = 70.0f * 40.0f; //need test 25 before for closets targets but seem to be wrong
 //float EBD = 300.0f * 40.0f; //distance for seer esp and box esp
+
+// Define the minimum and maximum values for max_fov, cfsize, and smooth
+float min_max_fov = 3.80f;
+float max_max_fov = 15.00f;
+float min_cfsize = min_max_fov;
+float max_cfsize = max_max_fov;
+float min_smooth = 90.00f;
+float max_smooth = 140.00f;
 
 bool firing_range = false;
 bool shooting = false; //read
@@ -163,7 +172,7 @@ bool next = false; //read write
 
 int index = 0;
 
-uint64_t add[29];
+uint64_t add[29];//29
 
 bool k_f1 = 0;
 bool k_f2 = 0;
@@ -199,23 +208,23 @@ void randomBone()
 
 spectator spectator_list[100];
 
-void Overlay::RenderSpectator() {
-    ImGui::SetNextWindowPos(ImVec2(490, 0));
-    ImGui::SetNextWindowSize(ImVec2(190, 130));
-    ImGui::Begin(XorStr("##spectator_list"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
-	ImGui::TextColored(RED, "%d", spectators);
-	ImGui::SameLine();
-	ImGui::Text("-");
-	ImGui::SameLine();
-	ImGui::TextColored(GREEN, "%d", allied_spectators);
+//void Overlay::RenderSpectator() {
+//    ImGui::SetNextWindowPos(ImVec2(490, 0));
+//    ImGui::SetNextWindowSize(ImVec2(190, 130));
+//    ImGui::Begin(XorStr("##spectator_list"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+//	ImGui::TextColored(RED, "%d", spectators);
+//	ImGui::SameLine();
+//	ImGui::Text("-");
+//	ImGui::SameLine();
+//	ImGui::TextColored(GREEN, "%d", allied_spectators);
 
-    int text_index = 0;
-    for (const auto& spectator : spectator_list) {
-        if (spectator.is_spec) {
-			ImGui::TextColored(WHITE, "%d", text_index + 1);
-            ImGui::SameLine(25);
-			ImGui::TextColored(ORANGE, "%s", spectator.name);
-            text_index++;
+ //   int text_index = 0;
+ //   for (const auto& spectator : spectator_list) {
+ //       if (spectator.is_spec) {
+//			ImGui::TextColored(WHITE, "%d", text_index + 1);
+ //           ImGui::SameLine(25);
+//			ImGui::TextColored(ORANGE, "%s", spectator.name);
+  //          text_index++;
 			//TEST// Convert char array to std::wstring
 			//std::wstring wideStr;
 			//for (int i = 0; spectator.name[i] != '\0'; ++i)
@@ -226,12 +235,21 @@ void Overlay::RenderSpectator() {
 
 			//text_index++;
 			//
-        }
-    }
+  //      }
+ //   }
 
-    ImGui::End();
+ //   ImGui::End();
     //memset(spectator_list, 0, sizeof(spectator_list));
+//}
+// Define a function for smooth interpolation using a cubic easing function
+float smoothStep(float edge0, float edge1, float x) {
+	// Scale, bias and saturate x to 0..1 range
+	x = (x - edge0) / (edge1 - edge0);
+	x = x < 0 ? 0 : (x > 1 ? 1 : x);
+	// Evaluate polynomial
+	return x * x * (3 - 2 * x);
 }
+
 
 void Overlay::RenderEsp()
 {
@@ -280,21 +298,16 @@ void Overlay::RenderEsp()
 					// Define the maximum distance you want to consider (previously referred to as max_distance)
 					//float max_dist = 80.0f * 40.0f; // Adjust this value as per your requirement
 
-					// Calculate a scaling factor based on the player's distance
+					// Assuming players[i].dist and max_dist are defined and initialized somewhere in your code
 					float distanceFactor = 1.0f - (players[i].dist / max_dist);
 
-					// Define the minimum and maximum values for max_fov, cfsize, and smooth
-					const float min_max_fov = 3.80f;
-					const float max_max_fov = 12.00f;
-					const float min_cfsize = min_max_fov;
-					const float max_cfsize = max_max_fov;
-					const float min_smooth = 90.00f;
-					const float max_smooth = 130.00f;
+					// Apply smooth step for more human-like transition
+					float easedDistanceFactor = smoothStep(0.0f, 1.0f, distanceFactor);
 
-					// Smoothly interpolate the adjusted values based on the distance factor
-					float adjusted_max_fov = min_max_fov + distanceFactor * (max_max_fov - min_max_fov);
-					float adjusted_cfsize = min_cfsize + distanceFactor * (max_cfsize - min_cfsize);
-					float adjusted_smooth = min_smooth + distanceFactor * (max_smooth - min_smooth);
+					// Smoothly interpolate the adjusted values based on the eased distance factor
+					float adjusted_max_fov = min_max_fov + easedDistanceFactor * (max_max_fov - min_max_fov);
+					float adjusted_cfsize = min_cfsize + easedDistanceFactor * (max_cfsize - min_cfsize);
+					float adjusted_smooth = min_smooth + easedDistanceFactor * (max_smooth - min_smooth);
 
 					// Check the distance condition and update the values accordingly
 					if (players[i].dist < DDS) // DDS at top as before
@@ -311,7 +324,7 @@ void Overlay::RenderEsp()
 						cfsize = max_fov;
 						aim_key = true; // You can set this based on your needs
 						aim_key2 = false;
-						smooth = 130.00f; //adjusted_smooth;
+						smooth = 140.00f; //adjusted_smooth;
 					}
 
 					//if(v.line)
@@ -321,7 +334,7 @@ void Overlay::RenderEsp()
 					{
 						std::string distance = std::to_string(players[i].dist / 39.62);
 						distance = distance.substr(0, distance.find('.')) + "m (" + std::to_string(players[i].entity_team) + ")";
-						distance += " |" + std::to_string(players[i].xp_level) + "|";
+						//distance += " |" + std::to_string(players[i].xp_level) + "|";
 
 						// Display the distance just below the name
 						if (players[i].knocked)
@@ -343,7 +356,7 @@ void Overlay::RenderEsp()
 						}
 					}
 
-					// Display the name just above the distance
+					// Display the name just below the distance
 					if (v.name)
 					{
 						if (players[i].knocked)
@@ -428,6 +441,10 @@ int main(int argc, char** argv)
 	add[27] = (uintptr_t)&onevone;
 	add[28] = (uintptr_t)&spectator_list;
 	//add[29] = (uintptr_t)&esp_distance;
+	//add[29] = (uintptr_t)&min_max_fov;
+	//add[30] = (uintptr_t)&max_max_fov;
+	//add[31] = (uintptr_t)&min_smooth;
+	//add[32] = (uintptr_t)&max_smooth;
 
 
 	printf(XorStr("add offset: 0x%I64x\n"), (uint64_t)&add[0] - (uint64_t)GetModuleHandle(NULL));
@@ -504,6 +521,10 @@ int main(int argc, char** argv)
 				config >> glowcolorknocked[2];
 				config >> firing_range;
 				//config >> onevone;
+				config >> min_max_fov;
+				config >> max_max_fov;
+				config >> min_smooth;
+				config >> max_smooth;
 				config.close();
 			}
 		}
@@ -614,7 +635,7 @@ int main(int argc, char** argv)
 
 		if (IsKeyDown(VK_DELETE) && k_del == 0)
 		{
-			k_del = 1;
+       			k_del = 1;
 			showing = !showing;
 		}
 		else if (!IsKeyDown(VK_DELETE) && k_del == 1)
@@ -622,6 +643,16 @@ int main(int argc, char** argv)
 			k_del = 0;
 		}
 		
+		// Check if the user presses and holds SPACEBAR
+		if (IsKeyDown(VK_SPACE))
+		{
+			SuperKey = true;
+		}
+		else 
+		{
+			SuperKey = false;
+		}
+
 		////////////////////////////////////NORMAL AIM & BUTTON///////////////////////////////////////
 		if (IsKeyDown(aim_key) || IsKeyDown(aim_key2))
 		{

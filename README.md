@@ -19,7 +19,7 @@ Added script install_memflow.sh to install memflow-kvm & memflow-qemu at https:/
 
 - Working on Windows 10 20H1 (only)
 
-- 1920/1080 (need to be changed manually)(default)
+- 1920/1080 (need to be changed manually)
 - 2560/1440 (default)
 
 VISUALS :

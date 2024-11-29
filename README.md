@@ -17,9 +17,10 @@ Added script install_memflow.sh to install memflow-kvm & memflow-qemu at https:/
     
 (DONT FORGET TO UPDATE WITH YOUR PATH IN THE SCRIPT AT # Export PATH & # Define variables)
 
-Working on Windows 10 20H1 (only)
-1920/1080 (need to be changed manually)(default)
-2560/1440 (default)
+- Working on Windows 10 20H1 (only)
+
+- 1920/1080 (need to be changed manually)(default)
+- 2560/1440 (default)
 
 VISUALS :
  - ESP Box, XP Level, Line, Name, Distance

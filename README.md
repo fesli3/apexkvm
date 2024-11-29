@@ -28,7 +28,7 @@ VISUALS :
  - Circle FOV
  - Players Glow (GREEN when visible, RED when not visible and YELLOW when knocked - Can be changed in the menu of the overlay)
  - Items Glow (complete disable)
- - Spectators count + Name List
+ - Spectators count + Name List (temporary disable)
 
 FEATURES :
  - New function to read localPlayer with OFFSET_LOCAL_ENTITY_HANDLE //[Miscellaneous].LocalEntityHandle (seem more easy for new updates)

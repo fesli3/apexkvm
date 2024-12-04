@@ -9,14 +9,26 @@ Game version (Steam): v3.0.4.31
 
 Removed build_libmemflow.zip.
 
-Added script install_memflow.sh to install memflow-kvm & memflow-qemu at https://github.com/albatror/memflow 
 if you still stuck at : 
 - Init with qemu connector...
 - Can't create qemu connector
 - Init with kvm connector...
 - Can't create kvm connector
+
+I added a script install_memflow.sh to install memflow-kvm & memflow-qemu at https://github.com/albatror/memflow so
+- Download sources from there *.zip or git
+- Extract it
+- Install Cargo & Rust with the famous curl https://sh.rustup.rs -sSf | sh
+- Install memflow with the famous curl --proto '=https' --tlsv1.2 -sSf https://sh.memflow.io | sh
+- Compile with the build.sh to see if any errors, if errors, fix it/them then redo build.
+- When build is ok without errors, Download from https://github.com/albatror/memflow/blob/main/install_memflow.sh
+- Make the script executable, Edit it, Read and Save.
+- Run it. You will see if its OK in the console :) then you will see in /apex_dma/memflow_lib/ 2 new folders :
+    * memflow-kvm
+    * memflow-qemu
+- Go back to rebuild the complete sources.
     
-(DONT FORGET TO UPDATE WITH YOUR PATH IN THE SCRIPT AT # Export PATH & # Define variables)
+(DONT FORGET TO UPDATE WITH YOUR PATH IF NEEDED IN THE SCRIPT AT # Export PATH & # Define variables)
 
 - Working on Windows 10 20H1 (only)
 

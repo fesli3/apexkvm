@@ -27,8 +27,6 @@ extern int index;
 
 //Dynamic Distance Stuff
 extern float DDS;
-//Distance ESP Seer and Box
-//extern float EBD;
 
 bool k_del = false;
 static bool fov = false;

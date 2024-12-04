@@ -8,7 +8,7 @@
 #include <fstream>
 #include <iostream>
 //test contraste texte
-#include "C:\Users\CHANGE_TO_YUR_USER\Documents\OKVM\apex_guest\Client\Client\imgui\imgui.h"
+#include "C:\Users\YOUR_USER\WHERE_YOU_KNOW\apex_guest\Client\Client\imgui\imgui.h"
 
 typedef struct player
 {
@@ -39,8 +39,6 @@ uint32_t check = 0xABCD;
 
 int aim_key = VK_LBUTTON;
 int aim_key2 = VK_RBUTTON;
-//int bhop_key = VK_SPACE;
-//int rapidfire_key = VK_XBUTTON1;
 bool use_nvidia = false;
 bool active = true;
 bool ready = false;
@@ -64,14 +62,13 @@ int SuperKey = VK_SPACE;  // VK_SPACE is the spacebar keycode
 //float esp_distance = 300.0f; // Units in meters
 
 float DDS = 70.0f * 40.0f; //need test 25 before for closets targets but seem to be wrong
-//float EBD = 300.0f * 40.0f; //distance for seer esp and box esp
 
 // Define the minimum and maximum values for max_fov, cfsize, and smooth
 float min_max_fov = 3.80f;
 float max_max_fov = 15.00f;
 float min_cfsize = min_max_fov;
 float max_cfsize = max_max_fov;
-float min_smooth = 90.00f;
+float min_smooth = 100.00f;
 float max_smooth = 140.00f;
 
 bool firing_range = false;
@@ -79,47 +76,12 @@ bool shooting = false; //read
 
 //bool bone_auto = true;
 //int shoot_key = VK_LBUTTON;
+
 //1v1
 bool onevone = false;
 
 //items
 //bool medbackpack = true;
-//bool heavybackpack = true;
-//bool goldbackpack = true;
-//Shield upgrades
-//bool shieldupgrade2 = true;  //blue
-//bool shieldupgrade3 = true;  //purple
-//bool shieldupgrade4 = true;  //gold
-//bool shieldupgrade5 = true;  //red
-//bool shieldupgradehead3 = true;
-//bool shieldupgradehead4 = true;
-//bool shielddown3 = true;
-//bool shielddown4 = true;
-//Optics
-//bool optic1xhcog = true;
-//bool optic2xhcog = true;
-//bool opticthreat = true;
-//Nades
-//bool grenade_arc_star = true;
-//bool grenade_thermite = true;
-//Shotguns
-//bool weapon_eva8 = true;
-//Energy weapons
-//bool weapon_lstar = true;
-//bool weapon_nemesis = true;
-//bool weapon_havoc = true;
-//bool weapon_prowler = false;
-//bool weapon_volt = true;
-//Heavy Weapons
-//bool weapon_flatline = true;
-//bool weapon_hemlock = true;
-//bool weapon_3030_repeater = true;
-//bool weapon_rampage = true;
-//bool weapon_car_smg = true;
-//Light weapons
-//bool weapon_re45 = true;
-//bool weapon_alternator = true;
-//bool weapon_r99 = true;
 
 ///test contraste texte
 ImU32 GetContrastColor(ImU32 backgroundColor) {
@@ -298,33 +260,30 @@ void Overlay::RenderEsp()
 					// Define the maximum distance you want to consider (previously referred to as max_distance)
 					//float max_dist = 80.0f * 40.0f; // Adjust this value as per your requirement
 
-					// Assuming players[i].dist and max_dist are defined and initialized somewhere in your code
-					float distanceFactor = 1.0f - (players[i].dist / max_dist);
-
-					// Apply smooth step for more human-like transition
+					// Optimize calculations by caching division
+					float distRatio = players[i].dist / max_dist;
+					float distanceFactor = 1.0f - distRatio;
 					float easedDistanceFactor = smoothStep(0.0f, 1.0f, distanceFactor);
 
-					// Smoothly interpolate the adjusted values based on the eased distance factor
-					float adjusted_max_fov = min_max_fov + easedDistanceFactor * (max_max_fov - min_max_fov);
-					float adjusted_cfsize = min_cfsize + easedDistanceFactor * (max_cfsize - min_cfsize);
-					float adjusted_smooth = min_smooth + easedDistanceFactor * (max_smooth - min_smooth);
+					// Pre-calculate the multipliers
+					float fovDiff = max_max_fov - min_max_fov;
+					float smoothDiff = max_smooth - min_smooth;
 
-					// Check the distance condition and update the values accordingly
-					if (players[i].dist < DDS) // DDS at top as before
-					{
-						max_fov = adjusted_max_fov;
-						cfsize = adjusted_cfsize;
-						aim_key = true; // You can set this based on your needs
-						aim_key2 = true;
-						smooth = adjusted_smooth;
-					}
-					else
-					{
-						max_fov = 3.80f; //adjusted_max_fov;
+					// Combine calculations
+					if (players[i].dist < DDS) {
+						float lerpFactor = easedDistanceFactor;
+						max_fov = min_max_fov + (fovDiff * lerpFactor);
 						cfsize = max_fov;
-						aim_key = true; // You can set this based on your needs
+						smooth = min_smooth + (smoothDiff * lerpFactor);
+						aim_key = aim_key2 = true;
+					}
+					else 
+					{
+						max_fov = 3.80f;
+						cfsize = max_fov;
+						smooth = 140.00f;
+						aim_key = true;
 						aim_key2 = false;
-						smooth = 140.00f; //adjusted_smooth;
 					}
 
 					//if(v.line)
@@ -409,43 +368,8 @@ int main(int argc, char** argv)
 	add[26] = (uintptr_t)&shooting;
 	//items
 	//add[28] = (uintptr_t)&medbackpack;
-	//add[29] = (uintptr_t)&heavybackpack;
-	//add[30] = (uintptr_t)&goldbackpack;
-	//add[31] = (uintptr_t)&shieldupgrade2;
-	//add[32] = (uintptr_t)&shieldupgrade3;
-	//add[33] = (uintptr_t)&shieldupgrade4;
-	//add[34] = (uintptr_t)&shieldupgrade5;
-	//add[35] = (uintptr_t)&shieldupgradehead3;
-	//add[36] = (uintptr_t)&shieldupgradehead4;
-	//add[37] = (uintptr_t)&shielddown3;
-	//add[38] = (uintptr_t)&shielddown4;
-	//add[39] = (uintptr_t)&optic1xhcog;
-	//add[40] = (uintptr_t)&optic2xhcog;
-	//add[41] = (uintptr_t)&opticthreat;
-	//add[42] = (uintptr_t)&grenade_arc_star;
-	//add[43] = (uintptr_t)&grenade_thermite;
-	//add[44] = (uintptr_t)&weapon_eva8;
-	//add[45] = (uintptr_t)&weapon_lstar;
-	//add[46] = (uintptr_t)&weapon_nemesis;
-	//add[47] = (uintptr_t)&weapon_havoc;
-	//add[48] = (uintptr_t)&weapon_prowler;
-	//add[49] = (uintptr_t)&weapon_volt;
-	//add[50] = (uintptr_t)&weapon_flatline;
-	//add[51] = (uintptr_t)&weapon_hemlock;
-	//add[52] = (uintptr_t)&weapon_3030_repeater;
-	//add[53] = (uintptr_t)&weapon_rampage;
-	//add[54] = (uintptr_t)&weapon_car_smg;
-	//add[55] = (uintptr_t)&weapon_re45;
-	//add[56] = (uintptr_t)&weapon_alternator;
-	//add[57] = (uintptr_t)&weapon_r99;
 	add[27] = (uintptr_t)&onevone;
 	add[28] = (uintptr_t)&spectator_list;
-	//add[29] = (uintptr_t)&esp_distance;
-	//add[29] = (uintptr_t)&min_max_fov;
-	//add[30] = (uintptr_t)&max_max_fov;
-	//add[31] = (uintptr_t)&min_smooth;
-	//add[32] = (uintptr_t)&max_smooth;
-
 
 	printf(XorStr("add offset: 0x%I64x\n"), (uint64_t)&add[0] - (uint64_t)GetModuleHandle(NULL));
 

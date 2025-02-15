@@ -98,7 +98,7 @@
 #define GLOW_FADE 0x388+ 0x30 // ats 3rd result of 3 offsets consecutive or first + 8 updated 01/10/2024
 #define HIGHLIGHT_SETTINGS 0xAE3BFC0 //[Miscellaneous].HighlightSettings updated 2025/02/12
 #define HIGHLIGHT_TYPE_SIZE 0x34 //? updated 01/10/2024
-#define OFFSET_CROSSHAIR_LAST OFFSET_VISIBLE_TIME + 0x19f8 //[Miscellaneous].CWeaponX!lastCrosshairTargetTime updated 2025/02/12
+#define OFFSET_CROSSHAIR_LAST OFFSET_VISIBLE_TIME + 0x8 //[Miscellaneous].CWeaponX!lastCrosshairTargetTime updated 2025/02/12
 //#define OFFSET_CROSSHAIR_START 0x1958 //CPlayer!crosshairTargetStartTime updated 01/9/2024
 #define OFFSET_CROSSHAIR_START 0x19f4 //[Miscellaneous].CWeaponX!crosshairTargetTime updated 2025/02/12
 #define OFFSET_INPUT_SYSTEM 0x1993600 //[Miscellaneous].InputSystem updated 2025/02/12 

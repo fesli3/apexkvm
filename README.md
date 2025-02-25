@@ -5,7 +5,7 @@ UnknownCheats thread: https://www.unknowncheats.me/forum/apex-legends/406426-kvm
 
 Bone IDs reference: https://www.unknowncheats.me/wiki/Apex_Legends_Bones_and_Hitboxes
 
-Game version (Steam & origin): v3.0.2.14
+Game version (Steam & origin): v3.0.1.25 
 
 Removed build_libmemflow.zip.
 

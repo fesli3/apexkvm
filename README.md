@@ -5,9 +5,9 @@ UnknownCheats thread: https://www.unknowncheats.me/forum/apex-legends/406426-kvm
 
 Bone IDs reference: https://www.unknowncheats.me/wiki/Apex_Legends_Bones_and_Hitboxes
 
-Game version (Steam & origin): v3.0.1.25 
+Game version (Steam & origin): v3.0.2.31 
 
-Removed build_libmemflow.zip.
+Updated to work with Apex DX 12
 
 if you still stuck at : 
 - Init with qemu connector...

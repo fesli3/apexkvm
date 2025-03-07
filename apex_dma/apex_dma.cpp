@@ -59,48 +59,12 @@ bool onevone = false;
 
 ///////////
 //bool medbackpack = true;
-//bool heavybackpack = true;
-//bool goldbackpack = true;
-//Shield upgrades
-//bool shieldupgrade2 = true;  //blue
-//bool shieldupgrade3 = true;  //purple
-//bool shieldupgrade4 = true;  //gold
-//bool shieldupgrade5 = true;  //red
-//bool shieldupgradehead3 = true;
-//bool shieldupgradehead4 = true;
-//bool shielddown3 = true;
-//bool shielddown4 = true;
-//Optics
-//bool optic1xhcog = true;
-//bool optic2xhcog = true;
-//bool opticthreat = true;
-//Nades
-//bool grenade_arc_star = true;
-//bool grenade_thermite = true;
-//Shotguns
-//bool weapon_eva8  = true;
-//Energy weapons
-//bool weapon_lstar = true;
-//bool weapon_nemesis = true;
-//bool weapon_havoc = true;
-//bool weapon_prowler  = false;
-//bool weapon_volt  = true;
-//Heavy Weapons
-//bool weapon_flatline = true;
-//bool weapon_hemlock  = true;
-//bool weapon_3030_repeater = true; 
-//bool weapon_rampage  = true;
-//bool weapon_car_smg  = true;
-//Light weapons
-//bool weapon_re45  = true;
-//bool weapon_alternator  = true;
-//bool weapon_r99  = true;
 ///////////
 bool updateInsideValue_t = false;
 ///////////////////////////
 //Player Glow Color and Brightness.
 //inside fill
-unsigned char insidevalue = 4;  //0 = no fill, 14 = full fill
+unsigned char insidevalue = 6;  //0 = no fill, 14 = full fill
 //Outline size
 unsigned char outlinesize = 32; // 0-255
 //Not Visable 
@@ -218,8 +182,12 @@ void SetPlayerGlow(Entity& LPlayer, Entity& Target, int index)
     				}
     			}
     	}
-    	
-    }
+    	//////////////////////////////////////////////////////////////////////////////////////////////////
+		else if((player_glow == 0) && Target.isGlowing())
+		{
+			Target.disableGlow();
+		}
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 void ProcessPlayer(Entity &LPlayer, Entity &target, uint64_t entitylist, int index)
@@ -387,15 +355,8 @@ void DoActions()
 ///////////////
 			std::this_thread::sleep_for(std::chrono::milliseconds(30));
 
-uint16_t LocalPlayer_idx = 0;
-apex_mem.Read<uint16_t>(g_Base + OFFSET_LOCAL_ENTITY_HANDLE, LocalPlayer_idx);
-
-// Ensure the LocalPlayer index is valid
-if (LocalPlayer_idx == 0xFFFF) continue;
-
-// Use the local player index to find the local player's entity in the entity list
-uintptr_t LocalPlayer = 0;
-apex_mem.Read<uintptr_t>(g_Base + OFFSET_ENTITYLIST + (LocalPlayer_idx << 5), LocalPlayer);
+			uint64_t LocalPlayer = 0;
+			apex_mem.Read<uint64_t>(g_Base + OFFSET_LOCAL_ENT, LocalPlayer);
 
 // Ensure the local player entity is valid
 			if (LocalPlayer == 0)
@@ -718,11 +679,9 @@ static void EspLoop()
 			{
 				valid = false;
 
-uint16_t LocalPlayer_idx = 0;
-apex_mem.Read<uint16_t>(g_Base + OFFSET_LOCAL_ENTITY_HANDLE, LocalPlayer_idx);
-
-// Ensure the local player index is valid
-if (LocalPlayer_idx == 0xFFFF)
+			uint64_t LocalPlayer = 0;
+			apex_mem.Read<uint64_t>(g_Base + OFFSET_LOCAL_ENT, LocalPlayer);
+				if (LocalPlayer == 0)
 {
     next = true;
     while(next && g_Base != 0 && c_Base != 0 && esp)
@@ -731,10 +690,6 @@ if (LocalPlayer_idx == 0xFFFF)
     }
     continue;
 }
-
-// Use the local player index to find the local player's entity in the entity list
-uintptr_t LocalPlayer = 0;
-apex_mem.Read<uintptr_t>(g_Base + OFFSET_ENTITYLIST + (LocalPlayer_idx << 5), LocalPlayer);
 
 // Ensure the local player entity is valid
 if (LocalPlayer == 0)
@@ -983,15 +938,9 @@ static void AimbotLoop()
 				}
 				lock = true;
 				lastaimentity = aimentity;
-uint16_t LocalPlayer_idx = 0;
-apex_mem.Read<uint16_t>(g_Base + OFFSET_LOCAL_ENTITY_HANDLE, LocalPlayer_idx);
 
-// Ensure the LocalPlayer index is valid
-if (LocalPlayer_idx == 0xFFFF) continue;
-
-// Use the local player index to find the local player's entity in the entity list
-uintptr_t LocalPlayer = 0;
-apex_mem.Read<uintptr_t>(g_Base + OFFSET_ENTITYLIST + (LocalPlayer_idx << 5), LocalPlayer);
+				uint64_t LocalPlayer = 0;
+				apex_mem.Read<uint64_t>(g_Base + OFFSET_LOCAL_ENT, LocalPlayer);
 
 // Ensure the local player entity is valid
 				if (LocalPlayer == 0)
@@ -1312,11 +1261,11 @@ int main(int argc, char *argv[])
 	}
 
 	const char* cl_proc = "Client.exe";
-	const char* ap_proc = "r5apex.exe";
+	const char* ap_proc = "r5apex_dx12.ex";
 	//const char* ap_proc = "EasyAntiCheat_launcher.exe";
 
 	//Client "add" offset
-	uint64_t add_off = 0x1gg9b0; //0x1fe9b0;
+	uint64_t add_off = 0x2ee9f1;
 	std::thread aimbot_thr;
 	std::thread esp_thr;
 	std::thread actions_thr;
